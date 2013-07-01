@@ -7,17 +7,22 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
+import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
 
 public class RenderContext implements Disposable {
 	public final SpriteBatch spriteBatch;
 	public final DelayedSpriteBatch delayedSpriteBatch;
+	public final DecalBatch decalBatch;
+	public final BillboardSpriteBatch billboardSpriteBatch;
 	public final ShapeRenderer debugGeometryRenderer;
 	public final ModelBatch modelBatch;
 	public final ScreenPixelScaler pixelScaler;
 	public final SolidColorTextureCache solidColorTextures;
 
+	CameraGroupStrategy cameraGroupStrategy;
 	Camera perspectiveCamera;
 	OrthographicCamera orthographicCamera;
 
@@ -37,6 +42,10 @@ public class RenderContext implements Disposable {
 		orthographicCamera = new OrthographicCamera(pixelScaler.getScaledWidth(), pixelScaler.getScaledHeight());
 
 		setDefaultPerspectiveCamera();
+
+		cameraGroupStrategy = new CameraGroupStrategy(perspectiveCamera);
+		decalBatch = new DecalBatch(cameraGroupStrategy);
+		billboardSpriteBatch = new BillboardSpriteBatch();
 	}
 
 	public Camera getPerspectiveCamera() {
@@ -49,15 +58,18 @@ public class RenderContext implements Disposable {
 
 	public void setPerspectiveCamera(Camera camera) {
 		perspectiveCamera = camera;
+		if (cameraGroupStrategy != null)
+			cameraGroupStrategy.setCamera(camera);
 	}
 
 	public void setDefaultPerspectiveCamera() {
-		perspectiveCamera = new PerspectiveCamera(60.0f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		perspectiveCamera.position.set(0.0f, 0.0f, 0.0f);
-		perspectiveCamera.lookAt(0.0f, 0.0f, 1.0f);
-		perspectiveCamera.near = 0.1f;
-		perspectiveCamera.far = 100.0f;
-		perspectiveCamera.update();
+		PerspectiveCamera camera = new PerspectiveCamera(60.0f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		camera.position.set(0.0f, 0.0f, 0.0f);
+		camera.lookAt(0.0f, 0.0f, 1.0f);
+		camera.near = 0.1f;
+		camera.far = 100.0f;
+		camera.update();
+		setPerspectiveCamera(camera);
 	}
 
 	public void clear() {
@@ -73,11 +85,13 @@ public class RenderContext implements Disposable {
 		spriteBatch.setProjectionMatrix(orthographicCamera.combined);
 		debugGeometryRenderer.begin(ShapeRenderer.ShapeType.Line);
 		delayedSpriteBatch.begin(spriteBatch);
+		billboardSpriteBatch.begin(decalBatch);
 		modelBatch.begin(perspectiveCamera);
 	}
 
 	public void onPostRender() {
 		modelBatch.end();
+		billboardSpriteBatch.end();
 		delayedSpriteBatch.end();
 		debugGeometryRenderer.end();
 	}
@@ -108,5 +122,7 @@ public class RenderContext implements Disposable {
 		Gdx.app.debug("RenderContext", String.format("dispose"));
 		solidColorTextures.dispose();
 		spriteBatch.dispose();
+		decalBatch.dispose();
+		cameraGroupStrategy.dispose();
 	}
 }
