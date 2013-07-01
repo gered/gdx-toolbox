@@ -70,7 +70,7 @@ public class BillboardSpriteBatch {
 		sprite.setHeight(height);
 		sprite.setPosition(x, y, z);
 		setTintAndBlending(sprite, tint);
-		rotateDecal(sprite, type);
+		setRotation(sprite, type);
 	}
 
 	public void draw(Type type, Texture texture, float x, float y, float z, float width, float height, float u, float v, float u2, float v2) {
@@ -87,7 +87,7 @@ public class BillboardSpriteBatch {
 		sprite.setHeight(height);
 		sprite.setPosition(x, y, z);
 		setTintAndBlending(sprite, tint);
-		rotateDecal(sprite, type);
+		setRotation(sprite, type);
 	}
 
 	public void flush() {
@@ -120,7 +120,7 @@ public class BillboardSpriteBatch {
 		camera = null;
 	}
 
-	private void rotateDecal(Decal decal, Type type) {
+	private void setRotation(Decal decal, Type type) {
 		switch (type) {
 			case Spherical:
 				decal.lookAt(camera.position, Vector3.Y);
