@@ -22,7 +22,7 @@ public class RenderContext implements Disposable {
 	public final ScreenPixelScaler pixelScaler;
 	public final SolidColorTextureCache solidColorTextures;
 
-	CameraGroupStrategy cameraGroupStrategy;
+	AlphaTestCameraGroupStrategy cameraGroupStrategy;
 	Camera perspectiveCamera;
 	OrthographicCamera orthographicCamera;
 
@@ -43,7 +43,7 @@ public class RenderContext implements Disposable {
 
 		setDefaultPerspectiveCamera();
 
-		cameraGroupStrategy = new CameraGroupStrategy(perspectiveCamera);
+		cameraGroupStrategy = new AlphaTestCameraGroupStrategy(perspectiveCamera);
 		decalBatch = new DecalBatch(cameraGroupStrategy);
 		billboardSpriteBatch = new BillboardSpriteBatch();
 	}
