@@ -53,6 +53,11 @@ public class RenderContext implements Disposable {
 
 	public void setDefaultPerspectiveCamera() {
 		perspectiveCamera = new PerspectiveCamera(60.0f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		perspectiveCamera.position.set(0.0f, 0.0f, 0.0f);
+		perspectiveCamera.lookAt(0.0f, 0.0f, 1.0f);
+		perspectiveCamera.near = 0.1f;
+		perspectiveCamera.far = 100.0f;
+		perspectiveCamera.update();
 	}
 
 	public void clear() {
