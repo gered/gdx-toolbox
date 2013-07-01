@@ -1,0 +1,263 @@
+package com.blarg.gdx.entities;
+
+import com.badlogic.gdx.utils.*;
+import com.blarg.gdx.entities.systemcomponents.InactiveComponent;
+import com.blarg.gdx.events.EventManager;
+import com.blarg.gdx.ReflectionUtils;
+import com.blarg.gdx.graphics.RenderContext;
+
+public class EntityManager {
+	public final EventManager eventManager;
+
+	ObjectSet<Entity> entities;
+	ObjectMap<Class<? extends Component>, ObjectMap<Entity, Component>> componentStore;
+	ObjectMap<Class<? extends Component>, Component> globalComponents;
+	Array<ComponentSystem> componentSystems;
+
+	Pool<Entity> entityPool = new Pool<Entity>() {
+		@Override
+		protected Entity newObject() {
+			return new Entity(EntityManager.this);
+		}
+	};
+
+	ObjectMap<Entity, Component> empty;
+
+	public EntityManager(EventManager eventManager) {
+		if (eventManager == null)
+			throw new IllegalArgumentException("eventManager can not be null.");
+
+		this.eventManager = eventManager;
+		entities = new ObjectSet<Entity>();
+		componentStore = new ObjectMap<Class<? extends Component>, ObjectMap<Entity, Component>>();
+		globalComponents = new ObjectMap<Class<? extends Component>, Component>();
+		componentSystems = new Array<ComponentSystem>();
+
+		// possibly ugliness, but this allows us to return empty.keys() in getAllWith()
+		// when there are no entities with a given component, preventing the calling code
+		// from needing to check for null before a for-loop
+		empty = new ObjectMap<Entity, Component>();
+	}
+
+	/*** public ComponentSystem management */
+
+	public <T extends ComponentSystem> T addSubsystem(Class<T> componentSystemType) {
+		if (getSubsystem(componentSystemType) != null)
+			throw new UnsupportedOperationException("ComponentSystem of that type is already registered.");
+
+		T subsystem;
+		try {
+			subsystem = ReflectionUtils.instantiateObject(componentSystemType,
+			                                              new Class<?>[] { EntityManager.class, EventManager.class },
+			                                              new Object[] { this, eventManager });
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Could not instantiate this type of ComponentSystem.", e);
+		}
+
+		componentSystems.add(subsystem);
+		return subsystem;
+	}
+
+	public <T extends ComponentSystem> T getSubsystem(Class<T> componentSystemType) {
+		int i = getSubsystemIndex(componentSystemType);
+		if (i == -1)
+			return null;
+		else
+			return componentSystemType.cast(componentSystems.get(i));
+	}
+
+	public <T extends ComponentSystem> void removeSubsystem(Class<T> componentSystemType) {
+		int i = getSubsystemIndex(componentSystemType);
+		if (i == -1)
+			return;
+
+		componentSystems.removeIndex(i);
+	}
+
+	public void removeAllSubsystems() {
+		componentSystems.clear();
+	}
+
+	/*** public Entity management ***/
+
+	public Entity add() {
+		Entity entity = entityPool.obtain();
+		entities.add(entity);
+		return entity;
+	}
+
+	public <T extends Component> Entity getFirstWith(Class<T> componentType) {
+		ObjectMap<Entity, Component> componentEntities = componentStore.get(componentType);
+		if (componentEntities == null)
+			return null;
+
+		if (componentEntities.size > 0)
+			return componentEntities.keys().next();
+		else
+			return null;
+	}
+
+	public <T extends Component> ObjectMap.Keys<Entity> getAllWith(Class<T> componentType) {
+		ObjectMap<Entity, Component> componentEntities = componentStore.get(componentType);
+		if (componentEntities == null)
+			return empty.keys();   // calling code won't need to check for null
+		else
+			return componentEntities.keys();
+	}
+
+	public void remove(Entity entity) {
+		if (entity == null)
+			throw new IllegalArgumentException("entity can not be null.");
+
+		removeAllComponentsFrom(entity);
+		entities.remove(entity);
+
+		entityPool.free(entity);
+	}
+
+	public void removeAll() {
+		for (Entity i : entities)
+			removeAllComponentsFrom(i);
+
+		entities.clear();
+	}
+
+	/*** public Entity Component management ***/
+
+	public <T extends Component> T addComponent(Class<T> componentType, Entity entity) {
+		if (getComponent(componentType, entity) != null)
+			throw new UnsupportedOperationException("Component of that type has been added to this entity already.");
+
+		// find the component-to-entity list for this component type, or create it if it doesn't exist yet
+		ObjectMap<Entity, Component> componentEntities = componentStore.get(componentType);
+		if (componentEntities == null) {
+			componentEntities = new ObjectMap<Entity, Component>();
+			componentStore.put(componentType, componentEntities);
+		}
+
+		T component = Pools.obtain(componentType);
+
+		componentEntities.put(entity, component);
+		return componentType.cast(component);
+	}
+
+	public <T extends Component> T getComponent(Class<T> componentType, Entity entity) {
+		ObjectMap<Entity, Component> componentEntities = componentStore.get(componentType);
+		if (componentEntities == null)
+			return null;
+
+		Component existing = componentEntities.get(entity);
+		if (existing == null)
+			return null;
+		else
+			return componentType.cast(existing);
+	}
+
+	public <T extends Component> void removeComponent(Class<T> componentType, Entity entity) {
+		ObjectMap<Entity, Component> componentEntities = componentStore.get(componentType);
+		if (componentEntities == null)
+			return;
+
+		Component component = componentEntities.remove(entity);
+		Pools.free(component);
+	}
+
+	public <T extends Component> boolean hasComponent(Class<T> componentType, Entity entity) {
+		ObjectMap<Entity, Component> componentEntities = componentStore.get(componentType);
+		if (componentEntities == null)
+			return false;
+
+		return componentEntities.containsKey(entity);
+	}
+
+	public void getAllComponentsFor(Entity entity, Array<Component> list) {
+		if (list == null)
+			throw new IllegalArgumentException("list can not be null.");
+
+		for (ObjectMap.Entry<Class<? extends Component>, ObjectMap<Entity, Component>> i : componentStore.entries()) {
+			ObjectMap<Entity, Component> entitiesWithComponent = i.value;
+			Component component = entitiesWithComponent.get(entity);
+			if (component != null)
+				list.add(component);
+		}
+	}
+
+	/*** global component management ***/
+
+	public <T extends Component> T addGlobal(Class<T> componentType) {
+		if (getGlobal(componentType) != null)
+			throw new UnsupportedOperationException("Global component of that type has been added already.");
+
+		T component = Pools.obtain(componentType);
+
+		globalComponents.put(componentType, component);
+		return componentType.cast(component);
+	}
+
+	public <T extends Component> T getGlobal(Class<T> componentType) {
+		Component existing = globalComponents.get(componentType);
+		if (existing == null)
+			return null;
+		else
+			return componentType.cast(existing);
+	}
+
+	public <T extends Component> void removeGlobal(Class<T> componentType) {
+		Component component = globalComponents.remove(componentType);
+		Pools.free(component);
+	}
+
+	public <T extends Component> boolean hasGlobal(Class<T> componentType) {
+		return globalComponents.containsKey(componentType);
+	}
+
+	/*** events ***/
+
+	public void onAppResume() {
+		for (int i = 0; i < componentSystems.size; ++i)
+			componentSystems.get(i).onAppResume();
+	}
+
+	public void onAppPause() {
+		for (int i = 0; i < componentSystems.size; ++i)
+			componentSystems.get(i).onAppPause();
+	}
+
+	public void onResize() {
+		for (int i = 0; i < componentSystems.size; ++i)
+			componentSystems.get(i).onResize();
+	}
+
+	public void onRender(float delta, RenderContext renderContext) {
+		for (int i = 0; i < componentSystems.size; ++i)
+			componentSystems.get(i).onRender(delta, renderContext);
+	}
+
+	public void onUpdate(float delta) {
+		for (Entity i : getAllWith(InactiveComponent.class))
+			remove(i);
+
+		for (int i = 0; i < componentSystems.size; ++i)
+			componentSystems.get(i).onUpdate(delta);
+	}
+
+	/*** private Entity/Component management ***/
+
+	private void removeAllComponentsFrom(Entity entity) {
+		if (entity == null)
+			throw new IllegalArgumentException("entity can not be null.");
+
+		for (ObjectMap.Entry<Class<? extends Component>, ObjectMap<Entity, Component>> i : componentStore.entries()) {
+			ObjectMap<Entity, Component> entitiesWithComponent = i.value;
+			entitiesWithComponent.remove(entity);
+		}
+	}
+
+	private <T extends ComponentSystem> int getSubsystemIndex(Class<T> componentSystemType) {
+		for (int i = 0; i < componentSystems.size; ++i) {
+			if (componentSystems.get(i).getClass() == componentSystemType)
+				return i;
+		}
+		return -1;
+	}
+}
