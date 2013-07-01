@@ -2,10 +2,12 @@ package com.blarg.gdx.graphics;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
+import com.badlogic.gdx.graphics.g3d.decals.DecalMaterial;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
@@ -67,7 +69,24 @@ public class BillboardSpriteBatch {
 		sprite.setWidth(width);
 		sprite.setHeight(height);
 		sprite.setPosition(x, y, z);
-		sprite.setColor(tint);
+		setTintAndBlending(sprite, tint);
+		rotateDecal(sprite, type);
+	}
+
+	public void draw(Type type, Texture texture, float x, float y, float z, float width, float height, float u, float v, float u2, float v2) {
+		draw(type, texture, x, y, z, width, height, u, v, u2, v2, Color.WHITE);
+	}
+
+	public void draw(Type type, Texture texture, float x, float y, float z, float width, float height, float u, float v, float u2, float v2, Color tint) {
+		Decal sprite = nextUsable();
+		TextureRegion textureRegion = sprite.getTextureRegion();
+		textureRegion.setRegion(texture);
+		textureRegion.setRegion(u, v, u2, v2);
+		sprite.setTextureRegion(textureRegion);
+		sprite.setWidth(width);
+		sprite.setHeight(height);
+		sprite.setPosition(x, y, z);
+		setTintAndBlending(sprite, tint);
 		rotateDecal(sprite, type);
 	}
 
@@ -121,6 +140,19 @@ public class BillboardSpriteBatch {
 				decal.setRotation(temp, Vector3.Y);
 				break;
 		}
+	}
+
+	private void setTintAndBlending(Decal decal, Color tint) {
+		int srcFactor = DecalMaterial.NO_BLEND;
+		int destFactor = DecalMaterial.NO_BLEND;
+
+		if (tint.a > 0.0f && tint.a < 1.0f) {
+			srcFactor = GL10.GL_SRC_ALPHA;
+			destFactor = GL10.GL_ONE_MINUS_SRC_ALPHA;
+		}
+
+		decal.setColor(tint);
+		decal.setBlending(srcFactor, destFactor);
 	}
 
 	private void increaseCapacity() {
