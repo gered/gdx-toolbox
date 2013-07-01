@@ -1,5 +1,7 @@
 package com.blarg.gdx.graphics;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
@@ -40,11 +42,35 @@ public class BillboardSpriteBatch {
 		pointer = 0;
 	}
 
+	public void draw(Texture texture, float x, float y, float z, float width, float height) {
+		draw(texture, x, y, z, width, height, Color.WHITE);
+	}
+
+	public void draw(Texture texture, float x, float y, float z, float width, float height, Color tint) {
+		Decal sprite = nextUsable();
+		TextureRegion textureRegion = sprite.getTextureRegion();
+		textureRegion.setRegion(texture);
+		sprite.setTextureRegion(textureRegion);
+		sprite.setWidth(width);
+		sprite.setHeight(height);
+		sprite.setPosition(x, y, z);
+		sprite.setColor(tint);
+	}
+
 	public void flush() {
 		if (!hasBegun)
 			throw new IllegalStateException("Cannot call outside of a begin/end block.");
 
-		// TODO: render decals with DecalBatch
+		for (int i = 0; i < pointer; ++i) {
+			Decal sprite = sprites.items[i];
+			decalBatch.add(sprite);
+		}
+		decalBatch.flush();
+
+		// don't want to hang on to Texture object references
+		// TODO: is this overkill? does this really make a big difference?
+		for (int i = 0; i < pointer; ++i)
+			sprites.items[i].getTextureRegion().setTexture(null);
 
 		pointer = 0;
 	}
