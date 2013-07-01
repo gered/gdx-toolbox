@@ -85,7 +85,7 @@ public class RenderContext implements Disposable {
 		spriteBatch.setProjectionMatrix(orthographicCamera.combined);
 		debugGeometryRenderer.begin(ShapeRenderer.ShapeType.Line);
 		delayedSpriteBatch.begin(spriteBatch);
-		billboardSpriteBatch.begin(decalBatch);
+		billboardSpriteBatch.begin(decalBatch, perspectiveCamera);
 		modelBatch.begin(perspectiveCamera);
 	}
 

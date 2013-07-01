@@ -1,10 +1,12 @@
 package com.blarg.gdx.graphics;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 
 /***
@@ -15,12 +17,20 @@ import com.badlogic.gdx.utils.Array;
  * </p>
  */
 public class BillboardSpriteBatch {
+	public enum Type {
+		Spherical,
+		Cylindrical,
+		ScreenAligned
+	}
+
+	static final Vector3 temp = new Vector3();
 	static final int CAPACITY_INCREMENT = 128;
 
 	Array<Decal> sprites;
 	int pointer;
 	boolean hasBegun;
 	DecalBatch decalBatch;
+	Camera camera;
 
 	public BillboardSpriteBatch() {
 		sprites = new Array<Decal>(true, CAPACITY_INCREMENT, Decal.class);
@@ -31,22 +41,25 @@ public class BillboardSpriteBatch {
 		decalBatch = null;
 	}
 
-	public void begin(DecalBatch decalBatch) {
+	public void begin(DecalBatch decalBatch, Camera camera) {
 		if (hasBegun)
 			throw new IllegalStateException("Cannot be called within an existing begin/end block.");
 		if (decalBatch == null)
 			throw new IllegalArgumentException();
+		if (camera == null)
+			throw new IllegalArgumentException();
 
 		this.decalBatch = decalBatch;
+		this.camera = camera;
 		hasBegun = true;
 		pointer = 0;
 	}
 
-	public void draw(Texture texture, float x, float y, float z, float width, float height) {
-		draw(texture, x, y, z, width, height, Color.WHITE);
+	public void draw(Type type, Texture texture, float x, float y, float z, float width, float height) {
+		draw(type, texture, x, y, z, width, height, Color.WHITE);
 	}
 
-	public void draw(Texture texture, float x, float y, float z, float width, float height, Color tint) {
+	public void draw(Type type, Texture texture, float x, float y, float z, float width, float height, Color tint) {
 		Decal sprite = nextUsable();
 		TextureRegion textureRegion = sprite.getTextureRegion();
 		textureRegion.setRegion(texture);
@@ -55,6 +68,7 @@ public class BillboardSpriteBatch {
 		sprite.setHeight(height);
 		sprite.setPosition(x, y, z);
 		sprite.setColor(tint);
+		rotateDecal(sprite, type);
 	}
 
 	public void flush() {
@@ -82,9 +96,32 @@ public class BillboardSpriteBatch {
 		flush();
 
 		hasBegun = false;
-		decalBatch = null;    // don't need to hold on to this particular reference anymore
+		// don't need to hold on to these references anymore
+		decalBatch = null;
+		camera = null;
 	}
 
+	private void rotateDecal(Decal decal, Type type) {
+		switch (type) {
+			case Spherical:
+				decal.lookAt(camera.position, Vector3.Y);
+				break;
+
+			case Cylindrical:
+				temp.set(camera.position)
+					.sub(decal.getPosition())
+					.nor();
+				temp.y = 0.0f;
+				decal.setRotation(temp, Vector3.Y);
+				break;
+
+			case ScreenAligned:
+				temp.set(camera.direction)
+					.scl(-1.0f, -1.0f, -1.0f); // opposite direction to the camera facing dir (point directly out of the screen)
+				decal.setRotation(temp, Vector3.Y);
+				break;
+		}
+	}
 
 	private void increaseCapacity() {
 		int newCapacity = sprites.items.length + CAPACITY_INCREMENT;
