@@ -63,9 +63,7 @@ public class BillboardSpriteBatch {
 
 	public void draw(Type type, Texture texture, float x, float y, float z, float width, float height, Color tint) {
 		Decal sprite = nextUsable();
-		TextureRegion textureRegion = sprite.getTextureRegion();
-		textureRegion.setRegion(texture);
-		sprite.setTextureRegion(textureRegion);
+		setTexture(sprite, texture);
 		sprite.setWidth(width);
 		sprite.setHeight(height);
 		sprite.setPosition(x, y, z);
@@ -79,10 +77,35 @@ public class BillboardSpriteBatch {
 
 	public void draw(Type type, Texture texture, float x, float y, float z, float width, float height, float u, float v, float u2, float v2, Color tint) {
 		Decal sprite = nextUsable();
-		TextureRegion textureRegion = sprite.getTextureRegion();
-		textureRegion.setRegion(texture);
-		textureRegion.setRegion(u, v, u2, v2);
-		sprite.setTextureRegion(textureRegion);
+		setTexture(sprite, texture, u, v, u2, v2);
+		sprite.setWidth(width);
+		sprite.setHeight(height);
+		sprite.setPosition(x, y, z);
+		setTintAndBlending(sprite, tint);
+		setRotation(sprite, type);
+	}
+
+	public void draw(Type type, Texture texture, float x, float y, float z, float width, float height, int srcX, int srcY, int srcWidth, int srcHeight) {
+		draw(type, texture, x, y, z, width, height, srcX, srcY, srcWidth, srcHeight, Color.WHITE);
+	}
+
+	public void draw(Type type, Texture texture, float x, float y, float z, float width, float height, int srcX, int srcY, int srcWidth, int srcHeight, Color tint) {
+		Decal sprite = nextUsable();
+		setTexture(sprite, texture, srcX, srcY, srcWidth, srcHeight);
+		sprite.setWidth(width);
+		sprite.setHeight(height);
+		sprite.setPosition(x, y, z);
+		setTintAndBlending(sprite, tint);
+		setRotation(sprite, type);
+	}
+
+	public void draw(Type type, TextureRegion region, float x, float y, float z, float width, float height) {
+		draw(type, region, x, y, z, width, height, Color.WHITE);
+	}
+
+	public void draw(Type type, TextureRegion region, float x, float y, float z, float width, float height, Color tint) {
+		Decal sprite = nextUsable();
+		setTexture(sprite, region);
 		sprite.setWidth(width);
 		sprite.setHeight(height);
 		sprite.setPosition(x, y, z);
@@ -118,6 +141,36 @@ public class BillboardSpriteBatch {
 		// don't need to hold on to these references anymore
 		decalBatch = null;
 		camera = null;
+	}
+
+	private void setTexture(Decal decal, Texture texture) {
+		TextureRegion textureRegion = decal.getTextureRegion();
+		textureRegion.setRegion(texture);
+		decal.setTextureRegion(textureRegion);
+	}
+
+	private void setTexture(Decal decal, Texture texture, float u, float v, float u2, float v2) {
+		TextureRegion textureRegion = decal.getTextureRegion();
+		textureRegion.setRegion(texture);
+		textureRegion.setRegion(u, v, u2, v2);
+		decal.setTextureRegion(textureRegion);
+	}
+
+	private void setTexture(Decal decal, Texture texture, int srcX, int srcY, int srcWidth, int srcHeight) {
+		TextureRegion textureRegion = decal.getTextureRegion();
+		textureRegion.setRegion(texture);
+		textureRegion.setRegion(srcX, srcY, srcWidth, srcHeight);
+		decal.setTextureRegion(textureRegion);
+	}
+
+	private void setTexture(Decal decal, TextureRegion srcRegion) {
+		// we don't want to keep a reference to the source region object (or replace the TextureRegion object
+		// reference on the Decal object with a different one) so that in flush() we can, without side-effect,
+		// clear the Texture object reference
+
+		TextureRegion dstRegion = decal.getTextureRegion();
+		dstRegion.setRegion(srcRegion);
+		decal.setTextureRegion(dstRegion);
 	}
 
 	private void setRotation(Decal decal, Type type) {
