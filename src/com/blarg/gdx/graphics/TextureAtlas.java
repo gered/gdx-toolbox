@@ -3,7 +3,6 @@ package com.blarg.gdx.graphics;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 
 public abstract class TextureAtlas {
 	public static final float TEXCOORD_EDGE_BLEED_OFFSET = 0.02f;

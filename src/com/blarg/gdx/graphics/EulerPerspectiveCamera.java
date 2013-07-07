@@ -1,7 +1,6 @@
 package com.blarg.gdx.graphics;
 
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
