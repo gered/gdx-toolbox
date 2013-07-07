@@ -40,9 +40,13 @@ public final class MathHelpers {
 	}
 
 	public static void getDirectionVector3FromAngles(float yawDegrees, float pitchDegrees, Vector3 result) {
-		result.x = MathUtils.cosDeg(yawDegrees) * MathUtils.cosDeg(pitchDegrees);
-		result.y = MathUtils.sinDeg(yawDegrees) * MathUtils.cosDeg(pitchDegrees);
-		result.z = MathUtils.sinDeg(pitchDegrees);
+		float yaw = MathUtils.degreesToRadians * yawDegrees;
+		float pitch = MathUtils.degreesToRadians * pitchDegrees;
+
+		// TODO: this appears to be consistent with OpenGL's coordinate system, but needs more testing to be 100% sure!
+		result.x = (float)Math.sin(yaw);
+		result.y = -((float)Math.sin(pitch) * (float)Math.cos(yaw));
+		result.z = -((float)Math.cos(pitch) * (float)Math.cos(yaw));
 	}
 
 	public static float getAngleBetween2D(final Vector2 a, final Vector2 b) {
@@ -52,14 +56,22 @@ public final class MathHelpers {
 	}
 
 	public static void getPointOnCircle(float radius, float degrees, Vector2 result) {
-		result.x = radius * MathUtils.cosDeg(degrees);
-		result.y = radius * MathUtils.sinDeg(degrees);
+		float radians = MathUtils.degreesToRadians * degrees;
+		result.x = radius * (float)Math.cos(radians);
+		result.y = radius * (float)Math.sin(radians);
+	}
+
+	public static float getAngleFromPointOnCircle(float x, float y) {
+		return MathUtils.radiansToDegrees * (float)Math.atan2(y, x);
 	}
 
 	public static void getCartesianCoordsFromSpherical(float radius, float inclination, float azimuth, Vector3 result) {
-		result.x = radius * MathUtils.sinDeg(inclination) * MathUtils.sinDeg(azimuth);
-		result.y = radius * MathUtils.cosDeg(inclination);
-		result.z = radius * MathUtils.sinDeg(inclination) * MathUtils.cosDeg(azimuth);
+		float inclinationRadians = MathUtils.degreesToRadians * inclination;
+		float azimuthRadians = MathUtils.degreesToRadians * azimuth;
+
+		result.x = radius * (float)Math.sin(inclinationRadians) * (float)Math.sin(azimuthRadians);
+		result.y = radius * (float)Math.cos(inclinationRadians);
+		result.z = radius * (float)Math.sin(inclinationRadians) * (float)Math.cos(azimuthRadians);
 	}
 
 	public static boolean areAlmostEqual(float a, float b) {
