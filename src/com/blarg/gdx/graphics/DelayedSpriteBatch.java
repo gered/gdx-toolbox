@@ -264,9 +264,11 @@ public class DelayedSpriteBatch {
 
 			float glyphWidth = ((float)glyph.width * scale);
 			float glyphHeight = ((float)glyph.height * scale);
+			float glyphXoffset = ((float)glyph.xoffset * scale);
+			float glyphYoffset = ((float)glyph.yoffset * scale);
 			draw(
 					fontTexture,
-					currentX + glyph.xoffset, currentY + glyph.yoffset,
+					currentX + glyphXoffset, currentY + glyphYoffset,
 					glyphWidth, glyphHeight,
 					glyph.srcX, glyph.srcY, glyph.width, glyph.height,
 					tint
