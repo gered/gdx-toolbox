@@ -83,6 +83,7 @@ public class RenderContext implements Disposable {
 
 	public void onPreRender() {
 		spriteBatch.setProjectionMatrix(orthographicCamera.combined);
+		debugGeometryRenderer.setProjectionMatrix(perspectiveCamera.combined);
 		debugGeometryRenderer.begin(ShapeRenderer.ShapeType.Line);
 		delayedSpriteBatch.begin(spriteBatch, perspectiveCamera, pixelScaler.getScale());
 		billboardSpriteBatch.begin(decalBatch, perspectiveCamera);
@@ -105,6 +106,8 @@ public class RenderContext implements Disposable {
 		Gdx.app.debug("RenderContext", String.format("onResize(%d, %d)", width, height));
 		pixelScaler.calculateScale(width, height);
 		orthographicCamera.setToOrtho(false, pixelScaler.getScaledWidth(), pixelScaler.getScaledHeight());
+		perspectiveCamera.viewportWidth = width;
+		perspectiveCamera.viewportHeight = height;
 	}
 
 	public void onPause() {
