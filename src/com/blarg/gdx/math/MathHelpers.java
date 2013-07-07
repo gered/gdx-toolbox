@@ -7,24 +7,24 @@ import com.badlogic.gdx.math.Vector3;
 public final class MathHelpers {
 	static final Vector2 v2tmpA = new Vector2();
 
-	public static final float EPSILON = 0.0000000001f;
+	public static final float EPSILON             = 0.0000000001f;
 
-	public static final float UP_2D    = 90.0f;
-	public static final float DOWN_2D  = 270.0f;
-	public static final float LEFT_2D  = 180.0f;
-	public static final float RIGHT_2D = 0.0f;
+	public static final float UP_2D               = 90.0f;
+	public static final float DOWN_2D             = 270.0f;
+	public static final float LEFT_2D             = 180.0f;
+	public static final float RIGHT_2D            = 0.0f;
 
-	public static final Vector2 UP_VECTOR2    = getDirectionVector2(UP_2D);    // new Vector2(0.0f,  1.0f);
-	public static final Vector2 DOWN_VECTOR2  = getDirectionVector2(DOWN_2D);  // new Vector2(0.0f,  -1.0f);
-	public static final Vector2 LEFT_VECTOR2  = getDirectionVector2(LEFT_2D);  // new Vector2(-1.0f, 0.0f);
-	public static final Vector2 RIGHT_VECTOR2 = getDirectionVector2(RIGHT_2D); // new Vector2(1.0f,  0.0f)
+	public static final Vector2 UP_VECTOR2        = getDirectionVector2(UP_2D);    // new Vector2(0.0f,  1.0f);
+	public static final Vector2 DOWN_VECTOR2      = getDirectionVector2(DOWN_2D);  // new Vector2(0.0f,  -1.0f);
+	public static final Vector2 LEFT_VECTOR2      = getDirectionVector2(LEFT_2D);  // new Vector2(-1.0f, 0.0f);
+	public static final Vector2 RIGHT_VECTOR2     = getDirectionVector2(RIGHT_2D); // new Vector2(1.0f,  0.0f)
 
-	public static final Vector3 UP_VECTOR3 = new Vector3(0.0f, 1.0f, 0.0f);
-	public static final Vector3 DOWN_VECTOR3 = new Vector3(0.0f, -1.0f, 0.0f);
-	public static final Vector3 FORWARD_VECTOR3 = new Vector3(0.0f, 0.0f, -1.0f);
-	public static final Vector3 BACKWARD_VECTOR3 = new Vector3(0.0f, 0.0f, 1.0f);
-	public static final Vector3 LEFT_VECTOR3 = new Vector3(-1.0f, 0.0f, 0.0f);
-	public static final Vector3 RIGHT_VECTOR3 = new Vector3(1.0f, 0.0f, 0.0f);
+	public static final Vector3 UP_VECTOR3        = new Vector3(0.0f, 1.0f, 0.0f);
+	public static final Vector3 DOWN_VECTOR3      = new Vector3(0.0f, -1.0f, 0.0f);
+	public static final Vector3 FORWARD_VECTOR3   = new Vector3(0.0f, 0.0f, -1.0f);
+	public static final Vector3 BACKWARD_VECTOR3  = new Vector3(0.0f, 0.0f, 1.0f);
+	public static final Vector3 LEFT_VECTOR3      = new Vector3(-1.0f, 0.0f, 0.0f);
+	public static final Vector3 RIGHT_VECTOR3     = new Vector3(1.0f, 0.0f, 0.0f);
 
 	public static void getDirectionVector2(float degrees, Vector2 result) {
 		result.set(1.0f, 0.0f);
