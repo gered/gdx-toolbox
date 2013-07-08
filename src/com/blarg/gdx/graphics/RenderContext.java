@@ -80,7 +80,6 @@ public class RenderContext implements Disposable {
 
 	public void onPreRender() {
 		spriteBatch.setProjectionMatrix(orthographicCamera.combined);
-		spriteBatch.setProjectionCamera(perspectiveCamera);
 		spriteBatch.setPixelScale(pixelScaler.getScale());
 		debugGeometryRenderer.setProjectionMatrix(perspectiveCamera.combined);
 		billboardSpriteBatch.begin(decalBatch, perspectiveCamera);

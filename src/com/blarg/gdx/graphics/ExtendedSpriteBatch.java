@@ -1,6 +1,7 @@
 package com.blarg.gdx.graphics;
 
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -13,9 +14,12 @@ import com.badlogic.gdx.math.Vector3;
  * are to make drawing sprites at projected screen coordinates easier.
  *
  * Projected screen coordinate sprite rendering requires a perspective camera to project the 3D coordinates correctly.
- * A camera _must_ be set via {@link #setProjectionCamera} before any of these draw methods are called.
+ * A camera _must_ be set via {@link #begin(Camera)} (instead of using {@link #begin()}) before any of these draw
+ * methods are called.
  */
 public class ExtendedSpriteBatch extends SpriteBatch {
+	static final float DEFAULT_COLOR = Color.WHITE.toFloatBits();
+
 	static final Vector3 tmp1 = new Vector3();
 
 	Camera projectionCamera;
@@ -41,14 +45,27 @@ public class ExtendedSpriteBatch extends SpriteBatch {
 		super(size, buffers, defaultShader);
 	}
 
-	public void setProjectionCamera(Camera camera) {
-		this.projectionCamera = camera;
-	}
-
 	public void setPixelScale(int pixelScale) {
 		if (pixelScale <= 0)
 			throw new IllegalArgumentException();
 		this.pixelScale = pixelScale;
+	}
+
+	@Override
+	public void begin() {
+		super.begin();
+		setColor(DEFAULT_COLOR);
+	}
+
+	public void begin(Camera projectionCamera) {
+		begin();
+		this.projectionCamera = projectionCamera;
+	}
+
+	@Override
+	public void end() {
+		super.end();
+		this.projectionCamera = null;
 	}
 
 	/**************************************************************************/

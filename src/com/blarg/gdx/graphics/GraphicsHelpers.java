@@ -1,19 +1,19 @@
 package com.blarg.gdx.graphics;
 
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 
 public final class GraphicsHelpers {
-	public static void renderCoordinateSystemAxis(ShapeRenderer shapeRenderer, ExtendedSpriteBatch spriteBatch, BitmapFont font, Vector3 origin) {
-		renderCoordinateSystemAxis(shapeRenderer, spriteBatch, font, origin, 5.0f);
+	public static void renderCoordinateSystemAxis(ShapeRenderer shapeRenderer, ExtendedSpriteBatch spriteBatch, Camera projectionCamera, BitmapFont font, Vector3 origin) {
+		renderCoordinateSystemAxis(shapeRenderer, spriteBatch, projectionCamera, font, origin, 5.0f);
 	}
 
-	public static void renderCoordinateSystemAxis(ShapeRenderer shapeRenderer, ExtendedSpriteBatch spriteBatch, BitmapFont font, Vector3 origin, float axisLength) {
+	public static void renderCoordinateSystemAxis(ShapeRenderer shapeRenderer, ExtendedSpriteBatch spriteBatch, Camera projectionCamera, BitmapFont font, Vector3 origin, float axisLength) {
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-		spriteBatch.begin();
+		spriteBatch.begin(projectionCamera);
 
 		shapeRenderer.setColor(Color.WHITE);
 		shapeRenderer.line(origin.x, origin.y, origin.z, origin.x + 0.0f, origin.y + axisLength, origin.z + 0.0f);
