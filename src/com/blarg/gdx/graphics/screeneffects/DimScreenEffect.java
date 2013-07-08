@@ -29,10 +29,13 @@ public class DimScreenEffect extends ScreenEffect
 		renderColor.a = alpha;
 		Texture texture = renderContext.solidColorTextures.get(color);
 
-		renderContext.delayedSpriteBatch.draw(
+		renderContext.spriteBatch.begin();
+		renderContext.spriteBatch.setColor(renderColor);
+		renderContext.spriteBatch.draw(
 				texture,
 				0, 0,
-				renderContext.pixelScaler.getScaledWidth(), renderContext.pixelScaler.getScaledHeight(),
-				renderColor);
+				renderContext.pixelScaler.getScaledWidth(), renderContext.pixelScaler.getScaledHeight()
+		);
+		renderContext.spriteBatch.end();
 	}
 }

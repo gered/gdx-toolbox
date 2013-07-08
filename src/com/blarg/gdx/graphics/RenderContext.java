@@ -12,8 +12,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
 
 public class RenderContext implements Disposable {
-	public final SpriteBatch spriteBatch;
-	public final DelayedSpriteBatch delayedSpriteBatch;
+	public final ExtendedSpriteBatch spriteBatch;
 	public final DecalBatch decalBatch;
 	public final BillboardSpriteBatch billboardSpriteBatch;
 	public final ShapeRenderer debugGeometryRenderer;
@@ -27,8 +26,7 @@ public class RenderContext implements Disposable {
 
 	public RenderContext(boolean use2dPixelScaling) {
 		Gdx.app.debug("RenderContext", "ctor");
-		spriteBatch = new SpriteBatch();
-		delayedSpriteBatch = new DelayedSpriteBatch();
+		spriteBatch = new ExtendedSpriteBatch();
 		debugGeometryRenderer = new ShapeRenderer();
 		modelBatch = new ModelBatch();
 		solidColorTextures = new SolidColorTextureCache();
@@ -82,18 +80,14 @@ public class RenderContext implements Disposable {
 
 	public void onPreRender() {
 		spriteBatch.setProjectionMatrix(orthographicCamera.combined);
+		spriteBatch.setProjectionCamera(perspectiveCamera);
+		spriteBatch.setPixelScale(pixelScaler.getScale());
 		debugGeometryRenderer.setProjectionMatrix(perspectiveCamera.combined);
-		debugGeometryRenderer.begin(ShapeRenderer.ShapeType.Line);
-		delayedSpriteBatch.begin(spriteBatch, perspectiveCamera, pixelScaler.getScale());
 		billboardSpriteBatch.begin(decalBatch, perspectiveCamera);
-		modelBatch.begin(perspectiveCamera);
 	}
 
 	public void onPostRender() {
-		modelBatch.end();
 		billboardSpriteBatch.end();
-		delayedSpriteBatch.end();
-		debugGeometryRenderer.end();
 	}
 
 	public void onUpdate(float delta) {

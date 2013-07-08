@@ -35,11 +35,14 @@ public class FlashScreenEffect extends ScreenEffect
 		Texture texture = renderContext.solidColorTextures.get(Color.WHITE);
 		color.a = alpha;
 
-		renderContext.delayedSpriteBatch.draw(
+		renderContext.spriteBatch.begin();
+		renderContext.spriteBatch.setColor(color);
+		renderContext.spriteBatch.draw(
 				texture,
 				0, 0,
-				renderContext.pixelScaler.getScaledWidth(), renderContext.pixelScaler.getScaledHeight(),
-				color);
+				renderContext.pixelScaler.getScaledWidth(), renderContext.pixelScaler.getScaledHeight()
+		);
+		renderContext.spriteBatch.end();
 	}
 
 	@Override
