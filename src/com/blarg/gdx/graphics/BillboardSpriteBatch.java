@@ -8,8 +8,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.decals.DecalMaterial;
+import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 
 /***
  * <p>
@@ -18,7 +20,7 @@ import com.badlogic.gdx.utils.Array;
  * as easy as rendering 2D sprites is with SpriteBatch / DelayedSpriteBatch.
  * </p>
  */
-public class BillboardSpriteBatch {
+public class BillboardSpriteBatch implements Disposable {
 	public enum Type {
 		Spherical,
 		Cylindrical,
@@ -31,8 +33,8 @@ public class BillboardSpriteBatch {
 	Array<Decal> sprites;
 	int pointer;
 	boolean hasBegun;
-	DecalBatch decalBatch;
-	Camera camera;
+	final AlphaTestCameraGroupStrategy groupStrategy;
+	final DecalBatch decalBatch;
 
 	public BillboardSpriteBatch() {
 		sprites = new Array<Decal>(true, CAPACITY_INCREMENT, Decal.class);
@@ -40,19 +42,17 @@ public class BillboardSpriteBatch {
 		addNewSprites(CAPACITY_INCREMENT);
 
 		hasBegun = false;
-		decalBatch = null;
+		groupStrategy = new AlphaTestCameraGroupStrategy(null);
+		decalBatch = new DecalBatch(groupStrategy);
 	}
 
-	public void begin(DecalBatch decalBatch, Camera camera) {
+	public void begin(Camera camera) {
 		if (hasBegun)
 			throw new IllegalStateException("Cannot be called within an existing begin/end block.");
-		if (decalBatch == null)
-			throw new IllegalArgumentException();
 		if (camera == null)
 			throw new IllegalArgumentException();
 
-		this.decalBatch = decalBatch;
-		this.camera = camera;
+		groupStrategy.setCamera(camera);
 		hasBegun = true;
 		pointer = 0;
 	}
@@ -138,9 +138,6 @@ public class BillboardSpriteBatch {
 		flush();
 
 		hasBegun = false;
-		// don't need to hold on to these references anymore
-		decalBatch = null;
-		camera = null;
 	}
 
 	private void setTexture(Decal decal, Texture texture) {
@@ -174,6 +171,8 @@ public class BillboardSpriteBatch {
 	}
 
 	private void setRotation(Decal decal, Type type) {
+		Camera camera = groupStrategy.getCamera();
+
 		switch (type) {
 			case Spherical:
 				decal.lookAt(camera.position, Vector3.Y);
@@ -230,5 +229,11 @@ public class BillboardSpriteBatch {
 		Decal usable = sprites.items[pointer];
 		pointer++;
 		return usable;
+	}
+
+	@Override
+	public void dispose() {
+		decalBatch.dispose();
+		groupStrategy.dispose();
 	}
 }
