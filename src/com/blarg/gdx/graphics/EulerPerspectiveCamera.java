@@ -14,9 +14,10 @@ import com.blarg.gdx.math.MathHelpers;
  * situations though (e.g. where some heavy-duty / crazy rotations are taking place). For most kinds of first person /
  * "up-right" type of cameras this is probably quite suitable.
  *
- * Use of {@link Camera#direction} is not supported. Changes to it are ignored completely. {@link Camera} methods which
- * modify this field in will all throw {@link UnsupportedOperationException}. Camera direction is solely controlled by
- * the yaw and pitch attributes added by this class.
+ * Changes to {@link Camera#direction} are ignored completely. However, this field will be updated appropriately
+ * whenever the other rotation-related properties are recalculated (e.g. {@link #forward} and {@link #rotation}).
+ * {@link Camera} methods which modify {@link Camera#direction} will all throw {@link UnsupportedOperationException}.
+ * Camera direction is solely controlled by the yaw and pitch attributes added by this class.
  *
  * Modification of position and orientation should all be performed via the provided methods: turn, pitch, move, etc.
  * These methods handle updating the internal Quaternion rotations and forward/target vectors. Modifying
@@ -120,6 +121,7 @@ public class EulerPerspectiveCamera extends Camera {
 		rotation.set(rotationY).mul(rotationX);
 
 		forward.set(MathHelpers.FORWARD_VECTOR3).mul(rotation);
+		direction.set(forward);
 		up.set(MathHelpers.UP_VECTOR3).mul(rotation);
 	}
 
@@ -132,8 +134,6 @@ public class EulerPerspectiveCamera extends Camera {
 		position.add(tmp1);
 		updateTarget();
 	}
-
-
 
 	public void moveTo(Vector3 position) {
 		this.position.set(position);
