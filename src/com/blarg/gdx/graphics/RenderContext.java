@@ -13,20 +13,19 @@ import com.badlogic.gdx.utils.Disposable;
 
 public class RenderContext implements Disposable {
 	public final ExtendedSpriteBatch spriteBatch;
-	public final DecalBatch decalBatch;
 	public final BillboardSpriteBatch billboardSpriteBatch;
 	public final ShapeRenderer debugGeometryRenderer;
 	public final ModelBatch modelBatch;
 	public final ScreenPixelScaler pixelScaler;
 	public final SolidColorTextureCache solidColorTextures;
 
-	AlphaTestCameraGroupStrategy cameraGroupStrategy;
 	Camera perspectiveCamera;
 	OrthographicCamera orthographicCamera;
 
 	public RenderContext(boolean use2dPixelScaling) {
 		Gdx.app.debug("RenderContext", "ctor");
 		spriteBatch = new ExtendedSpriteBatch();
+		billboardSpriteBatch = new BillboardSpriteBatch();
 		debugGeometryRenderer = new ShapeRenderer();
 		modelBatch = new ModelBatch();
 		solidColorTextures = new SolidColorTextureCache();
@@ -39,10 +38,6 @@ public class RenderContext implements Disposable {
 		orthographicCamera = new OrthographicCamera(pixelScaler.getScaledWidth(), pixelScaler.getScaledHeight());
 
 		setDefaultPerspectiveCamera();
-
-		cameraGroupStrategy = new AlphaTestCameraGroupStrategy(perspectiveCamera);
-		decalBatch = new DecalBatch(cameraGroupStrategy);
-		billboardSpriteBatch = new BillboardSpriteBatch();
 	}
 
 	public Camera getPerspectiveCamera() {
@@ -55,8 +50,6 @@ public class RenderContext implements Disposable {
 
 	public void setPerspectiveCamera(Camera camera) {
 		perspectiveCamera = camera;
-		if (cameraGroupStrategy != null)
-			cameraGroupStrategy.setCamera(camera);
 	}
 
 	public void setDefaultPerspectiveCamera() {
@@ -82,11 +75,9 @@ public class RenderContext implements Disposable {
 		spriteBatch.setProjectionMatrix(orthographicCamera.combined);
 		spriteBatch.setPixelScale(pixelScaler.getScale());
 		debugGeometryRenderer.setProjectionMatrix(perspectiveCamera.combined);
-		billboardSpriteBatch.begin(decalBatch, perspectiveCamera);
 	}
 
 	public void onPostRender() {
-		billboardSpriteBatch.end();
 	}
 
 	public void onUpdate(float delta) {
@@ -116,8 +107,7 @@ public class RenderContext implements Disposable {
 	public void dispose() {
 		Gdx.app.debug("RenderContext", String.format("dispose"));
 		solidColorTextures.dispose();
+		billboardSpriteBatch.dispose();
 		spriteBatch.dispose();
-		decalBatch.dispose();
-		cameraGroupStrategy.dispose();
 	}
 }
