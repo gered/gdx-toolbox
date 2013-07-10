@@ -10,11 +10,13 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
+import com.blarg.gdx.math.MathHelpers;
 
 public class RenderContext implements Disposable {
 	public final ExtendedSpriteBatch spriteBatch;
 	public final BillboardSpriteBatch billboardSpriteBatch;
-	public final ShapeRenderer debugGeometryRenderer;
+	public final ShapeRenderer debugGeometryRenderer2D;
+	public final ShapeRenderer debugGeometryRenderer3D;
 	public final ModelBatch modelBatch;
 	public final ScreenPixelScaler pixelScaler;
 	public final SolidColorTextureCache solidColorTextures;
@@ -26,7 +28,8 @@ public class RenderContext implements Disposable {
 		Gdx.app.debug("RenderContext", "ctor");
 		spriteBatch = new ExtendedSpriteBatch();
 		billboardSpriteBatch = new BillboardSpriteBatch();
-		debugGeometryRenderer = new ShapeRenderer();
+		debugGeometryRenderer2D = new ShapeRenderer();
+		debugGeometryRenderer3D = new ShapeRenderer();
 		modelBatch = new ModelBatch();
 		solidColorTextures = new SolidColorTextureCache();
 
@@ -49,13 +52,15 @@ public class RenderContext implements Disposable {
 	}
 
 	public void setPerspectiveCamera(Camera camera) {
+		if (camera == null)
+			throw new IllegalArgumentException();
 		perspectiveCamera = camera;
 	}
 
 	public void setDefaultPerspectiveCamera() {
 		PerspectiveCamera camera = new PerspectiveCamera(60.0f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(0.0f, 0.0f, 0.0f);
-		camera.lookAt(0.0f, 0.0f, 1.0f);
+		camera.lookAt(MathHelpers.FORWARD_VECTOR3);
 		camera.near = 0.1f;
 		camera.far = 100.0f;
 		camera.update();
@@ -74,7 +79,8 @@ public class RenderContext implements Disposable {
 	public void onPreRender() {
 		spriteBatch.setProjectionMatrix(orthographicCamera.combined);
 		spriteBatch.setPixelScale(pixelScaler.getScale());
-		debugGeometryRenderer.setProjectionMatrix(perspectiveCamera.combined);
+		debugGeometryRenderer2D.setProjectionMatrix(orthographicCamera.combined);
+		debugGeometryRenderer3D.setProjectionMatrix(perspectiveCamera.combined);
 	}
 
 	public void onPostRender() {
@@ -107,6 +113,7 @@ public class RenderContext implements Disposable {
 	public void dispose() {
 		Gdx.app.debug("RenderContext", String.format("dispose"));
 		solidColorTextures.dispose();
+		modelBatch.dispose();
 		billboardSpriteBatch.dispose();
 		spriteBatch.dispose();
 	}
