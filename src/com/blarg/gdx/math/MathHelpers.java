@@ -89,6 +89,24 @@ public final class MathHelpers {
 		return (diff <= largest * epsilon);
 	}
 
+	public static int sign(int value) {
+		if (value < 0)
+			return -1;
+		else if (value > 0)
+			return 1;
+		else
+			return 0;
+	}
+
+	public static float sign(float value) {
+		if (value < 0.0f)
+			return -1.0f;
+		else if (value > 0.0f)
+			return 1.0f;
+		else
+			return 0.0f;
+	}
+
 	public static float rolloverClamp(float value, float min, float max) {
 		float temp = value;
 		float range = Math.abs(max - min);
