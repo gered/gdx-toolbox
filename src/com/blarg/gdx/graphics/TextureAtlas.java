@@ -33,11 +33,24 @@ public abstract class TextureAtlas {
 		out.y = scaleTexCoordV(texCoord.y, tile);
 	}
 
+	public static void scaleTexCoord(Vector2 texCoord, float srcMin, float srcMax, TextureRegion tile, Vector2 out) {
+		out.x = scaleTexCoordU(texCoord.x, srcMin, srcMax, tile);
+		out.y = scaleTexCoordV(texCoord.y, srcMin, srcMax, tile);
+	}
+
 	public static float scaleTexCoordU(float u, TextureRegion tile) {
 		return MathHelpers.scaleRange(u, 0.0f, 1.0f, tile.getU(), tile.getU2());
 	}
 
+	public static float scaleTexCoordU(float u, float srcMinU, float srcMaxU, TextureRegion tile) {
+		return MathHelpers.scaleRange(u, srcMinU, srcMaxU, tile.getU(), tile.getU2());
+	}
+
 	public static float scaleTexCoordV(float v, TextureRegion tile) {
 		return MathHelpers.scaleRange(v, 0.0f, 1.0f, tile.getV(), tile.getV2());
+	}
+
+	public static float scaleTexCoordV(float v, float srcMinV, float srcMaxV, TextureRegion tile) {
+		return MathHelpers.scaleRange(v, srcMinV, srcMaxV, tile.getV(), tile.getV2());
 	}
 }
