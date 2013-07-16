@@ -3,6 +3,7 @@ package com.blarg.gdx.math;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 
 public final class MathHelpers {
 	static final Vector2 v2tmpA = new Vector2();
@@ -160,6 +161,16 @@ public final class MathHelpers {
 	public static float smoothStep(float low, float high, float t) {
 		float n = MathUtils.clamp(t, 0.0f, 1.0f);
 		return lerp(low, high, (n * n) * (3.0f - (2.0f * n)));
+	}
+
+	public static void getScaleFactor(BoundingBox originalSize, BoundingBox desiredSize, Vector3 result) {
+		getScaleFactor(originalSize.getDimensions(), desiredSize.getDimensions(), result);
+	}
+
+	public static void getScaleFactor(Vector3 originalSize, Vector3 desiredSize, Vector3 result) {
+		result.x = desiredSize.x / originalSize.x;
+		result.y = desiredSize.y / originalSize.y;
+		result.z = desiredSize.z / originalSize.z;
 	}
 
 	// convenience overloads that should not really be used except in non-performance-critical situations
