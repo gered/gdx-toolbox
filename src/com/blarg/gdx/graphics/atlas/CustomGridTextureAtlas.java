@@ -41,6 +41,43 @@ public class CustomGridTextureAtlas extends TextureAtlas {
 		return tiles.size - 1;
 	}
 
+	public int addGrid(int startX, int startY, int tileWidth, int tileHeight, int numTilesX, int numTilesY, int tileBorder) {
+		int actualTileWidth = tileWidth + tileBorder;
+		int actualTileHeight = tileHeight + tileBorder;
+
+		int numAdded = 0;
+
+		for (int y = 0; y < numTilesY; ++y)
+		{
+			for (int x = 0; x < numTilesX; ++x)
+			{
+				// pixel location/dimensions
+				int left = startX + tileBorder + x * actualTileWidth;
+				int top = startY + tileBorder + y * actualTileHeight;
+				int right = left + actualTileWidth - tileBorder;
+				int bottom = top + actualTileHeight - tileBorder;
+
+				// texture coordinates
+				// HACK: subtract edgeCoordOffset from the bottom right edges to
+				//       get around floating point rounding errors (adjacent tiles will
+				//       slightly bleed in otherwise)
+				float u = (left - tileBorder + edgeCoordOffset) / (float)texture.getWidth();
+				float v = (top - tileBorder + edgeCoordOffset) / (float)texture.getHeight();
+				float u2 = ((float)right + tileBorder - edgeCoordOffset) / (float)texture.getWidth();
+				float v2 = ((float)bottom + tileBorder - edgeCoordOffset) / (float)texture.getHeight();
+
+				TextureRegion tile = new TextureRegion();
+				tile.setTexture(texture);
+				tile.setRegion(u, v, u2, v2);
+				tiles.add(tile);
+
+				++numAdded;
+			}
+		}
+
+		return numAdded;
+	}
+
 	public void reset() {
 		tiles.clear();
 	}
