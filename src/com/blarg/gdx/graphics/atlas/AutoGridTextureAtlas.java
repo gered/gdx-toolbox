@@ -1,4 +1,4 @@
-package com.blarg.gdx.graphics;
+package com.blarg.gdx.graphics.atlas;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
