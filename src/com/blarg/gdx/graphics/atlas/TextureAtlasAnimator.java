@@ -7,6 +7,16 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.blarg.gdx.graphics.GraphicsHelpers;
 
+/**
+ * Animation manager class for animation sequences made up of tiles in a {@link TextureAtlas}. This class should only
+ * be used as a last resort when your rendering needs to animate TextureAtlas tiles as it performs animation by
+ * modifying the atlas's OpenGL texture every time an animation frame has to be changed. For most types of 2D rendering,
+ * there are better and faster ways of doing performing animation.
+ *
+ * The real intended use case is when a large 3D mesh is being rendered and textured with more then one different tile
+ * from a TextureAtlas where scanning through each vertex and animating UV coords is impractical or where doing the
+ * same type of UV coordinate animation in a shader is also impractical.
+ */
 public class TextureAtlasAnimator implements Disposable {
 	ObjectMap<String, AnimationSequence> animations;
 
