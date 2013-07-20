@@ -1,7 +1,7 @@
 package com.blarg.gdx.graphics;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
@@ -47,5 +47,22 @@ public final class GraphicsHelpers {
 
 		spriteBatch.end();
 		shapeRenderer.end();
+	}
+
+	/**
+	 * Same as {@link Texture#draw}, but also allows drawing the source Pixmap object to an unmanaged Texture object.
+	 * Note that doing so will mean that the original texture image data will be restored if the OpenGL context is
+	 * restored (any Pixmap's drawn to it will need to be redrawn after the context restore).
+	 */
+	public static void drawToTexture (Texture destTexture, Pixmap srcPixmap, int x, int y) {
+		Gdx.gl.glBindTexture(GL10.GL_TEXTURE_2D, destTexture.getTextureObjectHandle());
+		Gdx.gl.glTexSubImage2D(
+				GL10.GL_TEXTURE_2D, 0,
+				x, y,
+				srcPixmap.getWidth(), srcPixmap.getHeight(),
+				srcPixmap.getGLFormat(),
+				srcPixmap.getGLType(),
+				srcPixmap.getPixels()
+		);
 	}
 }
