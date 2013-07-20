@@ -71,6 +71,10 @@ public class TextureAtlasAnimator implements Disposable {
 			);
 		}
 
+		// may need to dispose of the TextureAtlas's texture Pixmap that we obtained (depending on TextureData implementation)
+		if (textureData.disposePixmap())
+			textureImage.dispose();
+
 		// all good!
 		animations.put(name, sequence);
 	}
