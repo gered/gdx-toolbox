@@ -107,7 +107,7 @@ public class StateManager implements Disposable {
 	}
 
 	public <T extends GameState> T overlay(Class<T> stateType) {
-		return overlay(stateType);
+		return overlay(stateType, null);
 	}
 
 	public <T extends GameState> T overlay(Class<T> stateType, String name) {
@@ -127,7 +127,7 @@ public class StateManager implements Disposable {
 	}
 
 	public <T extends GameState> T swapTopWith(Class<T> stateType) {
-		return swapTopWith(stateType);
+		return swapTopWith(stateType, null);
 	}
 
 	public <T extends GameState> T swapTopWith(Class<T> stateType, String name) {
@@ -154,7 +154,7 @@ public class StateManager implements Disposable {
 	}
 
 	public <T extends GameState> T swapTopNonOverlayWith(Class<T> stateType) {
-		return swapTopWith(stateType);
+		return swapTopWith(stateType, null);
 	}
 
 	public <T extends GameState> T swapTopNonOverlayWith(Class<T> stateType, String name) {
