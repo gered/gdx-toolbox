@@ -147,7 +147,7 @@ public class Vertices {
 	}
 
 	public int remainingSpace() {
-		return (numVertices - 1) - currentPosition;
+		return numVertices - currentPosition;
 	}
 
 	public void getPos(int index, Vector3 out) {
