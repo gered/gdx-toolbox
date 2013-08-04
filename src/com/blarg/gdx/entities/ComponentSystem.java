@@ -1,11 +1,12 @@
 package com.blarg.gdx.entities;
 
+import com.badlogic.gdx.utils.Disposable;
 import com.blarg.gdx.events.Event;
 import com.blarg.gdx.events.EventHandler;
 import com.blarg.gdx.events.EventManager;
 import com.blarg.gdx.graphics.RenderContext;
 
-public abstract class ComponentSystem extends EventHandler {
+public abstract class ComponentSystem extends EventHandler implements Disposable {
 	public final EntityManager entityManager;
 
 	public ComponentSystem(EntityManager entityManager, EventManager eventManager) {
@@ -34,5 +35,9 @@ public abstract class ComponentSystem extends EventHandler {
 	@Override
 	public boolean handle(Event e) {
 		return false;
+	}
+
+	@Override
+	public void dispose() {
 	}
 }

@@ -6,7 +6,7 @@ import com.blarg.gdx.events.EventManager;
 import com.blarg.gdx.ReflectionUtils;
 import com.blarg.gdx.graphics.RenderContext;
 
-public class EntityManager {
+public class EntityManager implements Disposable {
 	public final EventManager eventManager;
 
 	ObjectSet<Entity> entities;
@@ -75,6 +75,8 @@ public class EntityManager {
 	}
 
 	public void removeAllSubsystems() {
+		for (int i = 0; i < componentSystems.size; ++i)
+			componentSystems.get(i).dispose();
 		componentSystems.clear();
 	}
 
@@ -259,5 +261,11 @@ public class EntityManager {
 				return i;
 		}
 		return -1;
+	}
+
+	@Override
+	public void dispose() {
+		removeAll();
+		removeAllSubsystems();
 	}
 }
