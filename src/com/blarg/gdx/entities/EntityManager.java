@@ -213,6 +213,12 @@ public class EntityManager implements Disposable {
 		return globalComponents.containsKey(componentType);
 	}
 
+	public void removeAllGlobals() {
+		for (ObjectMap.Entry<Class<? extends Component>, Component> i : globalComponents.entries())
+			Pools.free(i.value);
+		globalComponents.clear();
+	}
+
 	/*** events ***/
 
 	public void onAppResume() {
@@ -266,6 +272,7 @@ public class EntityManager implements Disposable {
 	@Override
 	public void dispose() {
 		removeAll();
+		removeAllGlobals();
 		removeAllSubsystems();
 	}
 }
