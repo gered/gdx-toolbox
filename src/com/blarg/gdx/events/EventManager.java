@@ -43,7 +43,7 @@ public class EventManager {
 			throw new IllegalArgumentException("Duplicate event listener registration.");
 
 		listeners.add(listener);
-		Gdx.app.debug("EventManager", String.format("Added listener for event type: %s", eventType.getSimpleName()));
+		Gdx.app.debug("EventManager", String.format("Added %s as listener for event type: %s", listener.getClass().getSimpleName(), eventType.getSimpleName()));
 
 		// also update the list of currently registered event types
 		typeList.add(eventType);
@@ -61,7 +61,7 @@ public class EventManager {
 			return false;  // either no listeners for this type, or the listener wasn't registered with us
 
 		listeners.removeValue(listener, true);
-		Gdx.app.debug("EventManager", String.format("Removed listener for event type: %s", eventType.getSimpleName()));
+		Gdx.app.debug("EventManager", String.format("Removed %s as listener for event type: %s", listener.getClass().getSimpleName(), eventType.getSimpleName()));
 
 		// if there are no more listeners for this type, remove the event type
 		// from the list of registered event types
