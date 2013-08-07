@@ -44,6 +44,7 @@ public abstract class GameApp implements Disposable {
 
 	public void onUpdate(float delta) {
 		renderContext.onUpdate(delta);
+		eventManager.onUpdate(delta);
 		stateManager.onUpdate(delta);
 		if (stateManager.isEmpty()) {
 			Gdx.app.debug("GameApp", "No states running. Quitting.");
