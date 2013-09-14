@@ -206,6 +206,38 @@ public final class MathHelpers {
 		result.z = desiredSize.z / originalSize.z;
 	}
 
+	/**
+	 * Basically the same as {@link com.badlogic.gdx.math.Intersector#getLowestPositiveRoot} except for the addition
+	 * of a parameter maxR which limits the maximum root value we accept. Anything over this will also result
+	 * in a Float.NaN return value. A Float.NaN return means "no valid solution."
+	 */
+	public static float getLowestQuadraticRoot (float a, float b, float c, float maxR) {
+		float determinant = (b * b) - (4.0f * a * c);
+		// if the determinant is negative, there is no solution (can't square root a negative)
+		if (determinant < 0.0f)
+			return Float.NaN;
+
+		float sqrtDeterminant = (float)Math.sqrt(determinant);
+		float root1 = (-b - sqrtDeterminant) / (2.0f * a);
+		float root2 = (-b + sqrtDeterminant) / (2.0f * a);
+
+		// sort so root1 <= root2
+		if (root1 > root2) {
+			float tmp = root2;
+			root2 = root1;
+			root1 = tmp;
+		}
+
+		// get the lowest root
+		if (root1 > 0.0f && root1 < maxR)
+			return root1;
+		if (root2 > 0.0f && root2 < maxR)
+			return root2;
+
+		// no valid solutions found
+		return Float.NaN;
+	}
+
 	// convenience overloads that should not really be used except in non-performance-critical situations
 
 	public static Vector2 getDirectionVector2(float degrees) {
