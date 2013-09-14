@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 public final class MathHelpers {
 	static final Vector2 v2tmpA = new Vector2();
 
+	public static final float FLOAT_EPSILON       = 1.401298E-45f;   // smallest floating point value greater then zero
 	public static final float EPSILON             = 0.0000000001f;
 
 	public static final float UP_2D               = 90.0f;
