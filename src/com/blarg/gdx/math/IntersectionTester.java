@@ -321,7 +321,7 @@ public class IntersectionTester {
 	static final Vector3 edge = new Vector3();
 	static final Vector3 baseToVertex = new Vector3();
 
-	public static boolean sweptSphereTest(SweptSphereCollisionPacket packet, final Vector3 v1, final Vector3 v2, final Vector3 v3) {
+	public static boolean sweptSphereTest(SweptSphereCollisionPacket packet, Vector3 v1, Vector3 v2, Vector3 v3) {
 		boolean foundCollision = false;
 
 		tmp1.set(1.0f / packet.ellipsoidRadius.x, 1.0f / packet.ellipsoidRadius.y, 1.0f / packet.ellipsoidRadius.z);
