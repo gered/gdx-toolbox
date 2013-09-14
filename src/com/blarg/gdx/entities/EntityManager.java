@@ -118,8 +118,10 @@ public class EntityManager implements Disposable {
 	}
 
 	public void removeAll() {
-		for (Entity i : entities)
+		for (Entity i : entities) {
 			removeAllComponentsFrom(i);
+			entityPool.free(i);
+		}
 
 		entities.clear();
 	}
@@ -257,6 +259,9 @@ public class EntityManager implements Disposable {
 
 		for (ObjectMap.Entry<Class<? extends Component>, ObjectMap<Entity, Component>> i : componentStore.entries()) {
 			ObjectMap<Entity, Component> entitiesWithComponent = i.value;
+			Component component = entitiesWithComponent.get(entity);
+			if (component != null)
+				Pools.free(component);
 			entitiesWithComponent.remove(entity);
 		}
 	}
