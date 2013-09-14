@@ -1,6 +1,7 @@
 package com.blarg.gdx.entities;
 
 import com.badlogic.gdx.utils.*;
+import com.blarg.gdx.entities.systemcomponents.EntityPresetComponent;
 import com.blarg.gdx.entities.systemcomponents.InactiveComponent;
 import com.blarg.gdx.events.EventManager;
 import com.blarg.gdx.ReflectionUtils;
@@ -13,6 +14,7 @@ public class EntityManager implements Disposable {
 	ObjectMap<Class<? extends Component>, ObjectMap<Entity, Component>> componentStore;
 	ObjectMap<Class<? extends Component>, Component> globalComponents;
 	Array<ComponentSystem> componentSystems;
+	ObjectMap<Class<? extends EntityPreset>, EntityPreset> presets;
 
 	Pool<Entity> entityPool = new Pool<Entity>() {
 		@Override
@@ -32,6 +34,7 @@ public class EntityManager implements Disposable {
 		componentStore = new ObjectMap<Class<? extends Component>, ObjectMap<Entity, Component>>();
 		globalComponents = new ObjectMap<Class<? extends Component>, Component>();
 		componentSystems = new Array<ComponentSystem>();
+		presets = new ObjectMap<Class<? extends EntityPreset>, EntityPreset>();
 
 		// possibly ugliness, but this allows us to return empty.keys() in getAllWith()
 		// when there are no entities with a given component, preventing the calling code
@@ -80,11 +83,52 @@ public class EntityManager implements Disposable {
 		componentSystems.clear();
 	}
 
+	/*** public EntityPreset management */
+
+	public <T extends EntityPreset> void addPreset(Class<T> presetType) {
+		if (presets.containsKey(presetType))
+			throw new UnsupportedOperationException("EntityPreset of that type is already registered.");
+
+		T preset;
+		try {
+			preset = ReflectionUtils.instantiateObject(presetType,
+			                                           new Class<?>[] { EntityManager.class },
+			                                           new Object[] { this });
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Could not instantiate this type of EntityPreset.", e);
+		}
+
+		presets.put(presetType, preset);
+	}
+
+	public <T extends EntityPreset> void removePreset(Class<T> presetType) {
+		presets.remove(presetType);
+	}
+
+	public void removeAllPresets() {
+		presets.clear();
+	}
+
 	/*** public Entity management ***/
 
 	public Entity add() {
 		Entity entity = entityPool.obtain();
 		entities.add(entity);
+		return entity;
+	}
+
+	public <T extends EntityPreset> Entity addUsingPreset(Class<T> presetType) {
+		return addusingPreset(presetType, null);
+	}
+
+	public <T extends EntityPreset> Entity addusingPreset(Class<T> presetType, EntityPreset.CreationArgs args) {
+		EntityPreset preset = presets.get(presetType);
+		if (preset == null)
+			throw new IllegalArgumentException("Cannot add entity using an unregistered EntityPreset.");
+
+		Entity entity = preset.create(args);
+		entity.add(EntityPresetComponent.class).presetType = presetType;
+
 		return entity;
 	}
 
@@ -278,6 +322,7 @@ public class EntityManager implements Disposable {
 	public void dispose() {
 		removeAll();
 		removeAllGlobals();
+		removeAllPresets();
 		removeAllSubsystems();
 	}
 }
