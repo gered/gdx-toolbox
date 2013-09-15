@@ -15,23 +15,23 @@ public final class SweptSphereCollisionTester {
 	static final Vector3 edge = new Vector3();
 	static final Vector3 baseToVertex = new Vector3();
 
-	public static boolean test(SweptSphereCollisionPacket packet, Vector3 v1, Vector3 v2, Vector3 v3) {
+	public static boolean test(SweptSphere sphere, Vector3 v1, Vector3 v2, Vector3 v3) {
 		boolean foundCollision = false;
 
-		packet.toEllipsoidSpace(v1, p1);
-		packet.toEllipsoidSpace(v2, p2);
-		packet.toEllipsoidSpace(v3, p3);
+		SweptSphere.toEllipsoidSpace(v1, sphere.radius, p1);
+		SweptSphere.toEllipsoidSpace(v2, sphere.radius, p2);
+		SweptSphere.toEllipsoidSpace(v3, sphere.radius, p3);
 
 		trianglePlane.set(p1, p2, p3);
 		collisionPoint.set(Vector3.Zero);
 
 		// Is the triangle front-facing to the entity's velocity?
-		if (trianglePlane.isFrontFacing(packet.esNormalizedVelocity)) {
+		if (trianglePlane.isFrontFacing(sphere.esNormalizedVelocity)) {
 			float t0;
 			float t1;
 			boolean embeddedInPlane = false;
-			float distToTrianglePlane = trianglePlane.distance(packet.esPosition);
-			float normalDotVelocity = trianglePlane.normal.dot(packet.esVelocity);
+			float distToTrianglePlane = trianglePlane.distance(sphere.esPosition);
+			float normalDotVelocity = trianglePlane.normal.dot(sphere.esVelocity);
 
 			// Is the sphere travelling parallel to the plane?
 			if (normalDotVelocity == 0.0f) {
@@ -75,9 +75,9 @@ public final class SweptSphereCollisionTester {
 			// side of the triangle plane.
 			if (!embeddedInPlane) {
 				// planeIntersectionPoint = (packet.esPosition - trianglePlane.normal) + packet.esVelocity * t0
-				tmp1.set(packet.esVelocity).scl(t0);
+				tmp1.set(sphere.esVelocity).scl(t0);
 				planeIntersectionPoint
-						.set(packet.esPosition)
+						.set(sphere.esPosition)
 						.sub(trianglePlane.normal)
 						.add(tmp1);
 
@@ -91,8 +91,8 @@ public final class SweptSphereCollisionTester {
 			// If we haven't found a collision at this point, we need to check the
 			// points and edges of the triangle
 			if (!foundCollision) {
-				Vector3 velocity = packet.esVelocity;
-				Vector3 base = packet.esPosition;
+				Vector3 velocity = sphere.esVelocity;
+				Vector3 base = sphere.esPosition;
 				float velocitySquaredLength = velocity.len2();
 				float a, b, c;
 				float newT;
@@ -206,13 +206,13 @@ public final class SweptSphereCollisionTester {
 
 			// Set result of test
 			if (foundCollision) {
-				float distanceToCollision = t * packet.esVelocity.len();
+				float distanceToCollision = t * sphere.esVelocity.len();
 
 				// Does this triangle qualify for the closest collision?
-				if (!packet.foundCollision || distanceToCollision < packet.nearestDistance) {
-					packet.nearestDistance = distanceToCollision;
-					packet.esIntersectionPoint.set(collisionPoint);
-					packet.foundCollision = true;
+				if (!sphere.foundCollision || distanceToCollision < sphere.nearestCollisionDistance) {
+					sphere.nearestCollisionDistance = distanceToCollision;
+					sphere.esIntersectionPoint.set(collisionPoint);
+					sphere.foundCollision = true;
 				}
 			}
 		}
