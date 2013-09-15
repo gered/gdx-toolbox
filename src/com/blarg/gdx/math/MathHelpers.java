@@ -206,6 +206,13 @@ public final class MathHelpers {
 		result.z = desiredSize.z / originalSize.z;
 	}
 
+	public static void setLengthOf(Vector3 v, float length) {
+		float scaleFactor = length / v.len();
+		v.x = v.x * scaleFactor;
+		v.y = v.y * scaleFactor;
+		v.z = v.z * scaleFactor;
+	}
+
 	/**
 	 * Basically the same as {@link com.badlogic.gdx.math.Intersector#getLowestPositiveRoot} except for the addition
 	 * of a parameter maxR which limits the maximum root value we accept. Anything over this will also result
