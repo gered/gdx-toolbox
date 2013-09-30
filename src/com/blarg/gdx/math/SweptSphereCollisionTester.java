@@ -103,8 +103,11 @@ public final class SweptSphereCollisionTester {
 				a = velocitySquaredLength;
 
 				// P1
-				b = 2.0f * velocity.dot(tmp1.set(base).sub(p1));
-				c = tmp1.set(p1).sub(base).len2() - 1.0f;
+				b = 2.0f * velocity.dot(tmp1.set(base)
+				                            .sub(p1));
+				c = tmp1.set(p1)
+				        .sub(base)
+				        .len2() - 1.0f;
 				newT = MathHelpers.getLowestQuadraticRoot(a, b, c, t);
 				if (!Float.isNaN(newT)) {
 					t = newT;
@@ -113,8 +116,11 @@ public final class SweptSphereCollisionTester {
 				}
 
 				// P2
-				b = 2.0f * velocity.dot(tmp1.set(base).sub(p2));
-				c = tmp1.set(p2).sub(base).len2() - 1.0f;
+				b = 2.0f * velocity.dot(tmp1.set(base)
+				                            .sub(p2));
+				c = tmp1.set(p2)
+				        .sub(base)
+				        .len2() - 1.0f;
 				newT = MathHelpers.getLowestQuadraticRoot(a, b, c, t);
 				if (!Float.isNaN(newT)) {
 					t = newT;
@@ -123,8 +129,11 @@ public final class SweptSphereCollisionTester {
 				}
 
 				// P3
-				b = 2.0f * velocity.dot(tmp1.set(base).sub(p3));
-				c = tmp1.set(p3).sub(base).len2() - 1.0f;
+				b = 2.0f * velocity.dot(tmp1.set(base)
+				                            .sub(p3));
+				c = tmp1.set(p3)
+				        .sub(base)
+				        .len2() - 1.0f;
 				newT = MathHelpers.getLowestQuadraticRoot(a, b, c, t);
 				if (!Float.isNaN(newT)) {
 					t = newT;
@@ -135,8 +144,10 @@ public final class SweptSphereCollisionTester {
 				// Now check against the edges
 
 				// P1 -> P2
-				edge.set(p2).sub(p1);
-				baseToVertex.set(p1).sub(base);
+				edge.set(p2)
+				    .sub(p1);
+				baseToVertex.set(p1)
+				            .sub(base);
 				float edgeSquaredLength = edge.len2();
 				float edgeDotVelocity = edge.dot(velocity);
 				float edgeDotBaseToVertex = edge.dot(baseToVertex);
@@ -153,13 +164,17 @@ public final class SweptSphereCollisionTester {
 						// Intersection took place within the segment
 						t = newT;
 						foundCollision = true;
-						collisionPoint.set(p1).add(tmp1.set(edge).scl(f));
+						collisionPoint.set(p1)
+						              .add(tmp1.set(edge)
+						                       .scl(f));
 					}
 				}
 
 				// P2 -> P3
-				edge.set(p3).sub(p2);
-				baseToVertex.set(p2).sub(base);
+				edge.set(p3)
+				    .sub(p2);
+				baseToVertex.set(p2)
+				            .sub(base);
 				edgeSquaredLength = edge.len2();
 				edgeDotVelocity = edge.dot(velocity);
 				edgeDotBaseToVertex = edge.dot(baseToVertex);
@@ -176,13 +191,17 @@ public final class SweptSphereCollisionTester {
 						// Intersection took place within the segment
 						t = newT;
 						foundCollision = true;
-						collisionPoint.set(p2).add(tmp1.set(edge).scl(f));
+						collisionPoint.set(p2)
+						              .add(tmp1.set(edge)
+						                       .scl(f));
 					}
 				}
 
 				// P3 -> P1
-				edge.set(p1).sub(p3);
-				baseToVertex.set(p3).sub(base);
+				edge.set(p1)
+				    .sub(p3);
+				baseToVertex.set(p3)
+				            .sub(base);
 				edgeSquaredLength = edge.len2();
 				edgeDotVelocity = edge.dot(velocity);
 				edgeDotBaseToVertex = edge.dot(baseToVertex);
@@ -199,7 +218,9 @@ public final class SweptSphereCollisionTester {
 						// Intersection took place within the segment
 						t = newT;
 						foundCollision = true;
-						collisionPoint.set(p3).add(tmp1.set(edge).scl(f));
+						collisionPoint.set(p3)
+						              .add(tmp1.set(edge)
+						                       .scl(f));
 					}
 				}
 			}

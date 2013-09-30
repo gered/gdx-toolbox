@@ -78,17 +78,12 @@ public class SweptSphereHandler {
 			resultingVelocity.set(Vector3.Zero);
 			Vector3 newEsPosition = getNewPositionForMovement(0, sphere, esPosition, esVelocity, resultingVelocity, canSlide, onlySlideIfTooSteep, tooSteepAngleY);
 
-			// resulting velocity will have been calculated in ellipsoid space
+			// a bunch of things need to be converted back from ellipsoid space ...
 			sphere.fromEllipsoidSpace(resultingVelocity);
-
+			sphere.fromEllipsoidSpace(sphere.slidingPlaneOrigin);
+			sphere.fromEllipsoidSpace(newEsPosition, sphere.position);
 			if (sphere.foundCollision)
 				sphere.fromEllipsoidSpace(sphere.esIntersectionPoint, sphere.nearestCollisionPoint);
-
-			// sliding plane origin will be in ellipsoid space still...
-			sphere.fromEllipsoidSpace(sphere.slidingPlaneOrigin);
-
-			// convert the new position back to normal space and move the entity there
-			sphere.fromEllipsoidSpace(newEsPosition, sphere.position);
 
 			outVelocity.set(resultingVelocity);
 		}
@@ -127,11 +122,13 @@ public class SweptSphereHandler {
 
 		// if there was no collision, simply move along the velocity vector
 		if (!sphere.foundCollision)
-			return resultingPosition.set(currentPosition).add(velocity);
+			return resultingPosition.set(currentPosition)
+			                        .add(velocity);
 
 		// a collision did occur
 
-		tmpDestination.set(currentPosition).add(velocity);
+		tmpDestination.set(currentPosition)
+		              .add(velocity);
 		tmpNewPosition.set(currentPosition);
 
 		if (sphere.nearestCollisionDistance >= collisionVeryCloseDistance) {
@@ -152,13 +149,14 @@ public class SweptSphereHandler {
 				moveUpLength = sphere.nearestCollisionDistance - (collisionVeryCloseDistance * 0.5f);
 
 			MathHelpers.setLengthOf(tmp1.set(velocity), moveUpLength);
-			tmpNewPosition.set(sphere.esPosition).add(tmp1);
+			tmpNewPosition.set(sphere.esPosition)
+			              .add(tmp1);
 
 			// adjust the polygon intersection point, so the sliding plane will be
 			// unaffected by the fact that we move slightly less than the collision
 			// tells us
-			tmp1.nor();
-			tmp1.scl(collisionVeryCloseDistance);
+			tmp1.nor()
+			    .scl(collisionVeryCloseDistance);
 			sphere.esIntersectionPoint.sub(tmp1);
 		}
 
