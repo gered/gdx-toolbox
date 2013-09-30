@@ -8,8 +8,18 @@ public class SweptSphere {
 	public boolean foundCollision;
 	public float nearestCollisionDistance;
 	public final Vector3 nearestCollisionPoint = new Vector3();
+
+	public boolean isInMotion;
+	public boolean wasInMotion;
+	public boolean isFalling;
+	public boolean wasFalling;
 	public boolean isOnGround;
+	public boolean wasOnGround;
 	public boolean isSliding;
+	public boolean wasSliding;
+	public float fallDistance;
+	public float currentFallDistance;
+	public float lastPositionY;
 	public final Vector3 slidingPlaneNormal = new Vector3();
 	public final Vector3 slidingPlaneOrigin = new Vector3();
 
@@ -33,13 +43,23 @@ public class SweptSphere {
 
 	public void reset() {
 		position.set(Vector3.Zero);
-		foundCollision = false;
-		nearestCollisionDistance = 0.0f;
 		nearestCollisionPoint.set(Vector3.Zero);
+		isInMotion = false;
+		wasInMotion = false;
+		isFalling = false;
+		wasFalling = false;
 		isOnGround = false;
+		wasOnGround = false;
 		isSliding = false;
+		wasSliding = false;
+		fallDistance = 0.0f;
+		currentFallDistance = 0.0f;
+		lastPositionY = 0.0f;
 		slidingPlaneNormal.set(Vector3.Zero);
 		slidingPlaneOrigin.set(Vector3.Zero);
+
+		foundCollision = false;
+		nearestCollisionDistance = 0.0f;
 		radius.set(Vector3.Zero);
 		esPosition.set(Vector3.Zero);
 		esVelocity.set(Vector3.Zero);
