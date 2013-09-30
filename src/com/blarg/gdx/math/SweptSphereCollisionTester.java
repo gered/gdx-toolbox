@@ -20,9 +20,9 @@ public final class SweptSphereCollisionTester {
 	public static boolean test(SweptSphere sphere, Vector3 v1, Vector3 v2, Vector3 v3) {
 		boolean foundCollision = false;
 
-		SweptSphere.toEllipsoidSpace(v1, sphere.radius, p1);
-		SweptSphere.toEllipsoidSpace(v2, sphere.radius, p2);
-		SweptSphere.toEllipsoidSpace(v3, sphere.radius, p3);
+		sphere.toEllipsoidSpace(v1, p1);
+		sphere.toEllipsoidSpace(v2, p2);
+		sphere.toEllipsoidSpace(v3, p3);
 
 		trianglePlane.set(p1, p2, p3);
 

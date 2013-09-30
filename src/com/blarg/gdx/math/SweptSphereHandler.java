@@ -67,8 +67,8 @@ public class SweptSphereHandler {
 			//calculatePossibleCollisionArea(sphere, velocity);
 
 			// convert position and velocity to ellipsoid space
-			SweptSphere.toEllipsoidSpace(sphere.position, sphere.radius, esPosition);
-			SweptSphere.toEllipsoidSpace(velocity, sphere.radius, esVelocity);
+			sphere.toEllipsoidSpace(sphere.position, esPosition);
+			sphere.toEllipsoidSpace(velocity, esVelocity);
 
 			// check for and respond to any collisions along this velocity vector
 			sphere.nearestCollisionDistance = 0.0f;
@@ -79,16 +79,16 @@ public class SweptSphereHandler {
 			Vector3 newEsPosition = getNewPositionForMovement(0, sphere, esPosition, esVelocity, resultingVelocity, canSlide, onlySlideIfTooSteep, tooSteepAngleY);
 
 			// resulting velocity will have been calculated in ellipsoid space
-			SweptSphere.fromEllipsoidSpace(resultingVelocity, sphere.radius);
+			sphere.fromEllipsoidSpace(resultingVelocity);
 
 			if (sphere.foundCollision)
-				SweptSphere.fromEllipsoidSpace(sphere.esIntersectionPoint, sphere.radius, sphere.nearestCollisionPoint);
+				sphere.fromEllipsoidSpace(sphere.esIntersectionPoint, sphere.nearestCollisionPoint);
 
 			// sliding plane origin will be in ellipsoid space still...
-			SweptSphere.fromEllipsoidSpace(sphere.slidingPlaneOrigin, sphere.radius);
+			sphere.fromEllipsoidSpace(sphere.slidingPlaneOrigin);
 
 			// convert the new position back to normal space and move the entity there
-			SweptSphere.fromEllipsoidSpace(newEsPosition, sphere.radius, sphere.position);
+			sphere.fromEllipsoidSpace(newEsPosition, sphere.position);
 
 			outVelocity.set(resultingVelocity);
 		}

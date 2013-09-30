@@ -67,27 +67,27 @@ public class SweptSphere {
 		esIntersectionPoint.set(Vector3.Zero);
 	}
 
-	public static void toEllipsoidSpace(Vector3 in, Vector3 ellipsoidRadius, Vector3 out) {
-		out.x = in.x / ellipsoidRadius.x;
-		out.y = in.y / ellipsoidRadius.y;
-		out.z = in.z / ellipsoidRadius.z;
+	public void toEllipsoidSpace(Vector3 in, Vector3 out) {
+		out.x = in.x / radius.x;
+		out.y = in.y / radius.y;
+		out.z = in.z / radius.z;
 	}
 
-	public static void toEllipsoidSpace(Vector3 v, Vector3 ellipsoidRadius) {
-		v.x /= ellipsoidRadius.x;
-		v.y /= ellipsoidRadius.y;
-		v.z /= ellipsoidRadius.z;
+	public void toEllipsoidSpace(Vector3 v) {
+		v.x /= radius.x;
+		v.y /= radius.y;
+		v.z /= radius.z;
 	}
 
-	public static void fromEllipsoidSpace(Vector3 in, Vector3 ellipsoidRadius, Vector3 out) {
-		out.x = in.x * ellipsoidRadius.x;
-		out.y = in.y * ellipsoidRadius.y;
-		out.z = in.z * ellipsoidRadius.z;
+	public void fromEllipsoidSpace(Vector3 in, Vector3 out) {
+		out.x = in.x * radius.x;
+		out.y = in.y * radius.y;
+		out.z = in.z * radius.z;
 	}
 
-	public static void fromEllipsoidSpace(Vector3 v, Vector3 ellipsoidRadius) {
-		v.x *= ellipsoidRadius.x;
-		v.y *= ellipsoidRadius.y;
-		v.z *= ellipsoidRadius.z;
+	public void fromEllipsoidSpace(Vector3 v) {
+		v.x *= radius.x;
+		v.y *= radius.y;
+		v.z *= radius.z;
 	}
 }
