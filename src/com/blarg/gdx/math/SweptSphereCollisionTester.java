@@ -10,8 +10,10 @@ public final class SweptSphereCollisionTester {
 	static final Vector3 p2 = new Vector3();
 	static final Vector3 p3 = new Vector3();
 	static final Plane trianglePlane = new Plane(Vector3.Zero, 0.0f);
-	static final Vector3 planeIntersectionPoint = new Vector3();
 	static final Vector3 collisionPoint = new Vector3();
+	static final Vector3 planeIntersectionPoint = new Vector3();
+	static final Vector3 velocity = new Vector3();
+	static final Vector3 base = new Vector3();
 	static final Vector3 edge = new Vector3();
 	static final Vector3 baseToVertex = new Vector3();
 
@@ -23,7 +25,6 @@ public final class SweptSphereCollisionTester {
 		SweptSphere.toEllipsoidSpace(v3, sphere.radius, p3);
 
 		trianglePlane.set(p1, p2, p3);
-		collisionPoint.set(Vector3.Zero);
 
 		// Is the triangle front-facing to the entity's velocity?
 		if (trianglePlane.isFrontFacing(sphere.esNormalizedVelocity)) {
@@ -68,18 +69,17 @@ public final class SweptSphereCollisionTester {
 
 			// At this point, we have two time values (t0, t1) between which the
 			// swept sphere intersects with the triangle plane
+			collisionPoint.set(Vector3.Zero);
 			float t = 1.0f;
 
 			// First, check for a collision inside the triangle. This will happen
 			// at time t0 if at all as this is when the sphere rests on the front
 			// side of the triangle plane.
 			if (!embeddedInPlane) {
-				// planeIntersectionPoint = (packet.esPosition - trianglePlane.normal) + packet.esVelocity * t0
-				tmp1.set(sphere.esVelocity).scl(t0);
-				planeIntersectionPoint
-						.set(sphere.esPosition)
-						.sub(trianglePlane.normal)
-						.add(tmp1);
+				planeIntersectionPoint.set(sphere.esPosition)
+				                      .sub(trianglePlane.normal)
+				                      .add(tmp1.set(sphere.esVelocity)
+				                               .scl(t0));
 
 				if (IntersectionTester.test(planeIntersectionPoint, p1, p2, p3)) {
 					foundCollision = true;
@@ -91,8 +91,8 @@ public final class SweptSphereCollisionTester {
 			// If we haven't found a collision at this point, we need to check the
 			// points and edges of the triangle
 			if (!foundCollision) {
-				Vector3 velocity = sphere.esVelocity;
-				Vector3 base = sphere.esPosition;
+				velocity.set(sphere.esVelocity);
+				base.set(sphere.esPosition);
 				float velocitySquaredLength = velocity.len2();
 				float a, b, c;
 				float newT;
@@ -153,7 +153,7 @@ public final class SweptSphereCollisionTester {
 						// Intersection took place within the segment
 						t = newT;
 						foundCollision = true;
-						collisionPoint.set(edge).scl(f).add(p1);
+						collisionPoint.set(p1).add(tmp1.set(edge).scl(f));
 					}
 				}
 
@@ -176,7 +176,7 @@ public final class SweptSphereCollisionTester {
 						// Intersection took place within the segment
 						t = newT;
 						foundCollision = true;
-						collisionPoint.set(edge).scl(f).add(p2);
+						collisionPoint.set(p2).add(tmp1.set(edge).scl(f));
 					}
 				}
 
@@ -199,7 +199,7 @@ public final class SweptSphereCollisionTester {
 						// Intersection took place within the segment
 						t = newT;
 						foundCollision = true;
-						collisionPoint.set(edge).scl(f).add(p3);
+						collisionPoint.set(p3).add(tmp1.set(edge).scl(f));
 					}
 				}
 			}
