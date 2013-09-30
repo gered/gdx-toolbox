@@ -9,7 +9,7 @@ public final class MathHelpers {
 	static final Vector2 v2tmpA = new Vector2();
 
 	public static final float FLOAT_EPSILON       = 1.401298E-45f;   // smallest floating point value greater then zero
-	public static final float EPSILON             = 0.0000000001f;
+	public static final float EPSILON             = 0.000001f; //0.0000000001f;
 
 	public static final float UP_2D               = 90.0f;
 	public static final float DOWN_2D             = 270.0f;
@@ -80,15 +80,12 @@ public final class MathHelpers {
 		return areAlmostEqual(a, b, EPSILON);
 	}
 
-	public static boolean areAlmostEqual(float a, float b, float epsilon)
-	{
-		float diff = Math.abs(a - b);
-		a = Math.abs(a);
-		b = Math.abs(b);
+	public static boolean areAlmostEqual(float a, float b, float tolerance) {
+		return Math.abs(a - b) <= tolerance * Math.max(1.0f, Math.max(Math.abs(a), Math.abs(b)));
+	}
 
-		float largest = (b > a) ? b : a;
-
-		return (diff <= largest * epsilon);
+	public static boolean areAlmostEqual(float a, float b, float relativeTolerance, float absoluteTolerance) {
+		return Math.abs(a - b) <= Math.max(absoluteTolerance, relativeTolerance * Math.max(Math.abs(a), Math.abs(b)));
 	}
 
 	public static float fastInverseSqrt(float x) {
