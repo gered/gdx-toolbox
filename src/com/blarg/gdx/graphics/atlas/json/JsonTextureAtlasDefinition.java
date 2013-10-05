@@ -1,4 +1,4 @@
-package com.blarg.gdx.graphics.atlas;
+package com.blarg.gdx.graphics.atlas.json;
 
 import java.util.ArrayList;
 

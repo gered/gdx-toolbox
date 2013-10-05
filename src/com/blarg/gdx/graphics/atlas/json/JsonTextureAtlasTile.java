@@ -1,4 +1,4 @@
-package com.blarg.gdx.graphics.atlas;
+package com.blarg.gdx.graphics.atlas.json;
 
 public class JsonTextureAtlasTile {
 	public boolean autogrid;

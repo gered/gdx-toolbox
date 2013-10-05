@@ -1,9 +1,15 @@
-package com.blarg.gdx.graphics.atlas;
+package com.blarg.gdx.graphics.atlas.json;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Json;
+import com.blarg.gdx.graphics.atlas.CustomGridTextureAtlas;
+import com.blarg.gdx.graphics.atlas.TextureAtlas;
+import com.blarg.gdx.graphics.atlas.TextureAtlasAnimator;
+import com.blarg.gdx.graphics.atlas.json.JsonTextureAtlasAnimation;
+import com.blarg.gdx.graphics.atlas.json.JsonTextureAtlasDefinition;
+import com.blarg.gdx.graphics.atlas.json.JsonTextureAtlasTile;
 import com.blarg.gdx.io.FileHelpers;
 
 public final class TextureAtlasLoader {
