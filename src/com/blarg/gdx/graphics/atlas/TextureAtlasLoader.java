@@ -4,9 +4,24 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Json;
+import com.blarg.gdx.io.FileHelpers;
 
 public final class TextureAtlasLoader {
+	public static TextureAtlas load(String configFile) {
+		return load(configFile, null);
+	}
+
+	public static TextureAtlas load(String configFile, TextureAtlasAnimator animator) {
+		return load(Gdx.files.internal(configFile), animator);
+	}
+
 	public static TextureAtlas load(FileHandle configFile) {
+		return load(configFile, null);
+	}
+
+	public static TextureAtlas load(FileHandle configFile, TextureAtlasAnimator animator) {
+		String path = FileHelpers.getPath(configFile);
+
 		Json json = new Json();
 		JsonTextureAtlasDefinition config = json.fromJson(JsonTextureAtlasDefinition.class, configFile);
 
@@ -16,7 +31,7 @@ public final class TextureAtlasLoader {
 			throw new RuntimeException("No tiles defined.");
 
 		// TODO: loading via AssetManager
-		Texture texture = new Texture(Gdx.files.internal(config.texture));
+		Texture texture = new Texture(FileHelpers.open(configFile.type(), path + config.texture));
 		CustomGridTextureAtlas atlas = new CustomGridTextureAtlas(texture);
 
 		for (int i = 0; i < config.tiles.size(); ++i) {
