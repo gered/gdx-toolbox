@@ -43,6 +43,20 @@ public final class TextureAtlasLoader {
 				atlas.add(tile.x, tile.y, tile.width, tile.height);
 		}
 
+		if (config.animations != null && config.animations.size() > 0 && animator != null) {
+			for (int i = 0; i < config.animations.size(); ++i) {
+				JsonTextureAtlasAnimation animation = config.animations.get(i);
+				// TODO: parameter value error checking
+				animator.addSequence(animation.name,
+				                     atlas,
+				                     animation.tileIndex,
+				                     animation.startIndex,
+				                     animation.endIndex,
+				                     animation.delay,
+				                     animation.loop);
+			}
+		}
+
 		return atlas;
 	}
 }
