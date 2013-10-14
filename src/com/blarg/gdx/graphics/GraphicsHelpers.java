@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 public final class GraphicsHelpers {
@@ -46,6 +47,19 @@ public final class GraphicsHelpers {
 		spriteBatch.draw(font, origin.x + 0.0f, origin.y + 0.0f, origin.z + axisLength, "BACKWARD (+Z)", 0.5f);
 
 		spriteBatch.end();
+		shapeRenderer.end();
+	}
+
+	public static void renderGridPlane(ShapeRenderer shapeRenderer, int width, int depth, Matrix4 transform) {
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+		shapeRenderer.setTransformMatrix(transform);
+		shapeRenderer.setColor(Color.WHITE);
+
+		for (int i = 0; i <= width; ++i)
+			shapeRenderer.line((float)i, 0.0f, 0.0f, (float)i, 0.0f, (float)depth);
+		for (int i = 0; i <= depth; ++i)
+			shapeRenderer.line(0.0f, 0.0f, (float)i, (float)width, 0.0f, (float)i);
+
 		shapeRenderer.end();
 	}
 
