@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 public final class GraphicsHelpers {
+	final static Matrix4 tmpTransform = new Matrix4();
+
 	public static void renderCoordinateSystemAxis(ShapeRenderer shapeRenderer, ExtendedSpriteBatch spriteBatch, Camera projectionCamera, BitmapFont font, Vector3 origin) {
 		renderCoordinateSystemAxis(shapeRenderer, spriteBatch, projectionCamera, font, origin, 5.0f);
 	}
@@ -48,6 +50,16 @@ public final class GraphicsHelpers {
 
 		spriteBatch.end();
 		shapeRenderer.end();
+	}
+
+	public static void renderGridPlane(ShapeRenderer shapeRenderer, int width, int depth) {
+		tmpTransform.idt();
+		renderGridPlane(shapeRenderer, width, depth, tmpTransform);
+	}
+
+	public static void renderGridPlane(ShapeRenderer shapeRenderer, int width, int depth, float minX, float minY, float minZ) {
+		tmpTransform.idt().translate(minX, minY, minZ);
+		renderGridPlane(shapeRenderer, width, depth, tmpTransform);
 	}
 
 	public static void renderGridPlane(ShapeRenderer shapeRenderer, int width, int depth, Matrix4 transform) {
