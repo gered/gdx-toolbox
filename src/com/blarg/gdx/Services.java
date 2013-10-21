@@ -24,7 +24,7 @@ public class Services {
 		if (services.containsKey(type))
 			throw new UnsupportedOperationException("Another service of this type has already been registered.");
 
-		if (type.isAssignableFrom(Service.class))
+		if (Service.class.isInstance(service))
 			((Service)service).onRegister();
 
 		services.put(type, service);
@@ -42,7 +42,7 @@ public class Services {
 		services.remove(type);
 		Gdx.app.log("Services", String.format("Unregistered object of type %s.", type.getSimpleName()));
 
-		if (type.isAssignableFrom(Service.class))
+		if (Service.class.isInstance(service))
 			((Service)service).onUnregister();
 	}
 
