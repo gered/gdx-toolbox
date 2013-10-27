@@ -57,6 +57,10 @@ public class DebugGeometryRenderer {
 			Gdx.gl.glDisable(GL10.GL_DEPTH_TEST);
 	}
 
+	public void begin(Camera camera) {
+		begin(camera, false);
+	}
+
 	public void begin(Camera camera, boolean enableDepthTest) {
 		renderer.begin(camera.combined, GL10.GL_LINES);
 
