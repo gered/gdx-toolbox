@@ -31,7 +31,6 @@ public class DebugGeometryRenderer {
 
 	final ImmediateModeRenderer renderer;
 	boolean oldDepthTestEnabled;
-	float oldLineWidth;
 
 	public DebugGeometryRenderer() {
 		if (Gdx.graphics.isGL20Available())
@@ -66,12 +65,13 @@ public class DebugGeometryRenderer {
 
 		oldDepthTestEnabled = Gdx.gl20.glIsEnabled(GL10.GL_DEPTH_TEST);
 		enableDepthTest(enableDepthTest);
+		Gdx.gl20.glLineWidth(2.0f);
 	}
 
 	public void end() {
 		enableDepthTest(oldDepthTestEnabled);
-
 		renderer.end();
+		Gdx.gl20.glLineWidth(1.0f);
 	}
 
 	public void box(Vector3 min, Vector3 max) {
