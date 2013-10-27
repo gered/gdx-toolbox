@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.math.collision.Segment;
 import com.badlogic.gdx.math.collision.Sphere;
+import com.blarg.gdx.graphics.shaders.DebugShader;
 
 /**
  * Similar idea to {@link com.badlogic.gdx.graphics.glutils.ShapeRenderer}, but provides more convenient methods to
@@ -34,7 +35,7 @@ public class DebugGeometryRenderer {
 
 	public DebugGeometryRenderer() {
 		if (Gdx.graphics.isGL20Available())
-			renderer = new ImmediateModeRenderer20(false, true, 0);
+			renderer = new ImmediateModeRenderer20(5000, false, true, 0, new DebugShader());
 		else
 			renderer = new ImmediateModeRenderer10();
 	}
