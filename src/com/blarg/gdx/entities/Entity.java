@@ -1,6 +1,7 @@
 package com.blarg.gdx.entities;
 
 import com.blarg.gdx.entities.systemcomponents.EntityPresetComponent;
+import com.blarg.gdx.entities.systemcomponents.InactiveComponent;
 
 // Yes, this class SHOULD be marked final. No, you ARE wrong for wanting to subclass this.
 // There IS a better way to do what you were thinking of doing that DOESN'T involve
@@ -47,5 +48,9 @@ public final class Entity {
 			return presetComponent.presetType;
 		else
 			return null;
+	}
+
+	public boolean isInactive() {
+		return entityManager.hasComponent(InactiveComponent.class, this);
 	}
 }
