@@ -30,6 +30,8 @@ public class DebugGeometryRenderer {
 	static final Segment tmpSegment = new Segment(Vector3.Zero, Vector3.Zero);
 
 	final ImmediateModeRenderer renderer;
+	boolean oldDepthTestEnabled;
+	float oldLineWidth;
 
 	public DebugGeometryRenderer() {
 		if (Gdx.graphics.isGL20Available())
@@ -50,9 +52,16 @@ public class DebugGeometryRenderer {
 
 	public void begin(Camera camera) {
 		renderer.begin(camera.combined, GL10.GL_LINES);
+
+		oldDepthTestEnabled = Gdx.gl20.glIsEnabled(GL10.GL_DEPTH_TEST);
+		if (!oldDepthTestEnabled)
+			Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
 	}
 
 	public void end() {
+		if (!oldDepthTestEnabled)
+			Gdx.gl.glDisable(GL10.GL_DEPTH_TEST);
+
 		renderer.end();
 	}
 
