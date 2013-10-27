@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 
 public final class MathHelpers {
 	static final Vector2 v2tmpA = new Vector2();
+	static final Vector2 v2tmpB = new Vector2();
 
 	public static final float FLOAT_EPSILON       = 1.401298E-45f;   // smallest floating point value greater then zero
 	public static final float EPSILON             = 0.000001f; //0.0000000001f;
@@ -35,7 +36,7 @@ public final class MathHelpers {
 
 	public static void getDirectionVector3FromYAxis(float yAxisDegrees, Vector3 result) {
 		result.y = 0.0f;
-		float adjustedAngle = rolloverClamp(yAxisDegrees - 90.0f, 0.0f, 360.0f);
+		float adjustedAngle = rolloverClamp(yAxisDegrees, 0.0f, 360.0f);
 		getPointOnCircle(1.0f, adjustedAngle, v2tmpA);
 		result.x = v2tmpA.x;
 		result.z = v2tmpA.y;
@@ -49,6 +50,18 @@ public final class MathHelpers {
 		result.x = (float)Math.sin(yaw);
 		result.y = -((float)Math.sin(pitch) * (float)Math.cos(yaw));
 		result.z = -((float)Math.cos(pitch) * (float)Math.cos(yaw));
+	}
+
+	public static float getYAngleBetween(Vector3 a, Vector3 b) {
+		v2tmpA.set(a.x, a.z);
+		v2tmpB.set(b.x, b.z);
+		float angle = v2tmpB.sub(v2tmpA)
+		                    .angle();
+
+		if (angle < 0)
+			angle += 360.0f;
+
+		return angle;
 	}
 
 	public static float getAngleBetween2D(final Vector2 a, final Vector2 b) {
