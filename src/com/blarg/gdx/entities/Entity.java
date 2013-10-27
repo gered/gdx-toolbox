@@ -1,5 +1,7 @@
 package com.blarg.gdx.entities;
 
+import com.blarg.gdx.entities.systemcomponents.EntityPresetComponent;
+
 // Yes, this class SHOULD be marked final. No, you ARE wrong for wanting to subclass this.
 // There IS a better way to do what you were thinking of doing that DOESN'T involve
 // subclassing Entity!
@@ -33,5 +35,17 @@ public final class Entity {
 
 	public <T extends Component> boolean has(Class<T> componentType) {
 		return entityManager.hasComponent(componentType, this);
+	}
+
+	public boolean wasCreatedViaPreset() {
+		return entityManager.hasComponent(EntityPresetComponent.class, this);
+	}
+
+	public Class<? extends EntityPreset> getPresetUsedToCreate() {
+		EntityPresetComponent presetComponent = entityManager.getComponent(EntityPresetComponent.class, this);
+		if (presetComponent != null)
+			return presetComponent.presetType;
+		else
+			return null;
 	}
 }
