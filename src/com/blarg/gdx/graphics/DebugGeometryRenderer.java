@@ -50,17 +50,22 @@ public class DebugGeometryRenderer {
 		renderer.vertex(x, y, z);
 	}
 
-	public void begin(Camera camera) {
+	private void enableDepthTest(boolean enable) {
+		if (enable)
+			Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
+		else
+			Gdx.gl.glDisable(GL10.GL_DEPTH_TEST);
+	}
+
+	public void begin(Camera camera, boolean enableDepthTest) {
 		renderer.begin(camera.combined, GL10.GL_LINES);
 
 		oldDepthTestEnabled = Gdx.gl20.glIsEnabled(GL10.GL_DEPTH_TEST);
-		if (!oldDepthTestEnabled)
-			Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
+		enableDepthTest(enableDepthTest);
 	}
 
 	public void end() {
-		if (!oldDepthTestEnabled)
-			Gdx.gl.glDisable(GL10.GL_DEPTH_TEST);
+		enableDepthTest(oldDepthTestEnabled);
 
 		renderer.end();
 	}
