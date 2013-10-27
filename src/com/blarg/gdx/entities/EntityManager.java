@@ -151,6 +151,17 @@ public class EntityManager implements Disposable {
 			return componentEntities.keys();
 	}
 
+	public <T extends EntityPreset> void getAllCreatedWithPreset(Class<T> presetType, Array<Entity> outMatchingEntities) {
+		if (outMatchingEntities == null)
+			throw new IllegalArgumentException("Must supply an Array object to store the matching entities in.");
+
+		for (Entity i : getAllWith(EntityPresetComponent.class)) {
+			EntityPresetComponent entityPreset = i.get(EntityPresetComponent.class);
+			if (presetType.isAssignableFrom(entityPreset.presetType))
+				outMatchingEntities.add(i);
+		}
+	}
+
 	public void remove(Entity entity) {
 		if (entity == null)
 			throw new IllegalArgumentException("entity can not be null.");
