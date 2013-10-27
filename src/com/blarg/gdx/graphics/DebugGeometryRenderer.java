@@ -13,6 +13,13 @@ import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.math.collision.Segment;
 import com.badlogic.gdx.math.collision.Sphere;
 
+/**
+ * Similar idea to {@link com.badlogic.gdx.graphics.glutils.ShapeRenderer}, but provides more convenient methods to
+ * render 3D geometry primitives. ShapeRenderer is pretty good, except it seems to be written with more thought put
+ * towards 2D geometry primitives. Since this is a *debug* renderer, which is intended to be used in *debug code*, I
+ * prefer to make usage of this as convenient as possible and so providing a bunch of different overloads per primitive
+ * type is a good thing (easier/quicker to write code to render in as few lines as possible)
+ */
 public class DebugGeometryRenderer {
 	static final Color COLOR_1 = new Color(Color.YELLOW);
 	static final Color COLOR_2 = new Color(Color.RED);
