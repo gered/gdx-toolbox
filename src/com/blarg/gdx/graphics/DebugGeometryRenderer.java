@@ -24,6 +24,11 @@ public class DebugGeometryRenderer {
 	static final Color COLOR_1 = new Color(Color.YELLOW);
 	static final Color COLOR_2 = new Color(Color.RED);
 
+	static final BoundingBox tmpBox = new BoundingBox();
+	static final Sphere tmpSphere = new Sphere(Vector3.Zero, 0.0f);
+	static final Ray tmpRay = new Ray(Vector3.Zero, Vector3.Zero);
+	static final Segment tmpSegment = new Segment(Vector3.Zero, Vector3.Zero);
+
 	final ImmediateModeRenderer renderer;
 
 	public DebugGeometryRenderer() {
@@ -49,6 +54,28 @@ public class DebugGeometryRenderer {
 
 	public void end() {
 		renderer.end();
+	}
+
+	public void box(Vector3 min, Vector3 max) {
+		box(min, max, COLOR_1);
+	}
+
+	public void box(Vector3 min, Vector3 max, Color color) {
+		tmpBox.min.set(min);
+		tmpBox.max.set(max);
+		box(tmpBox, color);
+	}
+
+	public void box(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) {
+		tmpBox.min.set(minX, minY, minZ);
+		tmpBox.max.set(maxX, maxY, maxZ);
+		box(tmpBox, COLOR_1);
+	}
+
+	public void box(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Color color) {
+		tmpBox.min.set(minX, minY, minZ);
+		tmpBox.max.set(maxX, maxY, maxZ);
+		box(tmpBox, color);
 	}
 
 	public void box(BoundingBox box) {
@@ -98,6 +125,28 @@ public class DebugGeometryRenderer {
 
 		vtx(box.min.x, box.min.y, box.max.z, color);
 		vtx(box.min.x, box.min.y, box.min.z, color);
+	}
+
+	public void sphere(Vector3 center, float radius) {
+		sphere(center, radius, COLOR_1);
+	}
+
+	public void sphere(Vector3 center, float radius, Color color) {
+		tmpSphere.center.set(center);
+		tmpSphere.radius = radius;
+		sphere(tmpSphere, color);
+	}
+
+	public void sphere(float centerX, float centerY, float centerZ, float radius) {
+		tmpSphere.center.set(centerX, centerY, centerZ);
+		tmpSphere.radius = radius;
+		sphere(tmpSphere, COLOR_1);
+	}
+
+	public void sphere(float centerX, float centerY, float centerZ, float radius, Color color) {
+		tmpSphere.center.set(centerX, centerY, centerZ);
+		tmpSphere.radius = radius;
+		sphere(tmpSphere, color);
 	}
 
 	public void sphere(Sphere sphere) {
@@ -150,6 +199,25 @@ public class DebugGeometryRenderer {
 		}
 	}
 
+	public void ray(Vector3 origin, Vector3 direction, float length) {
+		ray(origin, direction, length, COLOR_1, COLOR_2);
+	}
+
+	public void ray(Vector3 origin, Vector3 direction, float length, Color originColor, Color endPointColor) {
+		tmpRay.set(origin, direction);
+		ray(tmpRay, length, originColor, endPointColor);
+	}
+
+	public void ray(float originX, float originY, float originZ, float directionX, float directionY, float directionZ, float length) {
+		tmpRay.set(originX, originY, originZ, directionX, directionY, directionZ);
+		ray(tmpRay, length, COLOR_1, COLOR_2);
+	}
+
+	public void ray(float originX, float originY, float originZ, float directionX, float directionY, float directionZ, float length, Color originColor, Color endPointColor) {
+		tmpRay.set(originX, originY, originZ, directionX, directionY, directionZ);
+		ray(tmpRay, length, originColor, endPointColor);
+	}
+
 	public void ray(Ray ray, float length) {
 		ray(ray, length, COLOR_1, COLOR_2);
 	}
@@ -160,6 +228,28 @@ public class DebugGeometryRenderer {
 
 		vtx(ray.origin, originColor);
 		vtx(endPoint, endPointColor);
+	}
+
+	public void line(Vector3 a, Vector3 b) {
+		line(a, b, COLOR_1);
+	}
+
+	public void line(Vector3 a, Vector3 b, Color color) {
+		tmpSegment.a.set(a);
+		tmpSegment.b.set(b);
+		line(tmpSegment, color);
+	}
+
+	public void line(float aX, float aY, float aZ, float bX, float bY, float bZ) {
+		tmpSegment.a.set(aX, aY, aZ);
+		tmpSegment.b.set(bX, bY, bZ);
+		line(tmpSegment, COLOR_1);
+	}
+
+	public void line(float aX, float aY, float aZ, float bX, float bY, float bZ, Color color) {
+		tmpSegment.a.set(aX, aY, aZ);
+		tmpSegment.b.set(bX, bY, bZ);
+		line(tmpSegment, color);
 	}
 
 	public void line(Segment line) {
