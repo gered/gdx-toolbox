@@ -1,7 +1,6 @@
 package com.blarg.gdx.graphics.screeneffects;
 
 import com.badlogic.gdx.utils.Disposable;
-import com.blarg.gdx.graphics.RenderContext;
 
 public abstract class ScreenEffect implements Disposable
 {
@@ -26,7 +25,7 @@ public abstract class ScreenEffect implements Disposable
 	public void onResize() {
 	}
 
-	public void onRender(float delta, RenderContext renderContext) {
+	public void onRender(float delta) {
 	}
 
 	public void onUpdate(float delta) {

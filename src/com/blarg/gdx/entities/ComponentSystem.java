@@ -4,7 +4,6 @@ import com.badlogic.gdx.utils.Disposable;
 import com.blarg.gdx.events.Event;
 import com.blarg.gdx.events.EventHandler;
 import com.blarg.gdx.events.EventManager;
-import com.blarg.gdx.graphics.RenderContext;
 
 public abstract class ComponentSystem extends EventHandler implements Disposable {
 	public final EntityManager entityManager;
@@ -26,7 +25,7 @@ public abstract class ComponentSystem extends EventHandler implements Disposable
 	public void onResize() {
 	}
 
-	public void onRender(float delta, RenderContext renderContext) {
+	public void onRender(float delta) {
 	}
 
 	public void onUpdate(float delta) {

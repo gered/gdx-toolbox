@@ -3,10 +3,9 @@ package com.blarg.gdx.states;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
 import com.blarg.gdx.GameApp;
+import com.blarg.gdx.ReflectionUtils;
 import com.blarg.gdx.Strings;
 import com.blarg.gdx.events.EventManager;
-import com.blarg.gdx.ReflectionUtils;
-import com.blarg.gdx.graphics.RenderContext;
 
 import java.util.LinkedList;
 
@@ -254,12 +253,12 @@ public class StateManager implements Disposable {
 		}
 	}
 
-	public void onRender(float delta, RenderContext renderContext) {
+	public void onRender(float delta) {
 		for (int i = getTopNonOverlayIndex(); i != -1 && i < states.size(); ++i) {
 			StateInfo stateInfo = states.get(i);
 			if (!stateInfo.isInactive) {
-				stateInfo.state.onRender(delta, renderContext);
-				stateInfo.state.effectManager.onRenderGlobal(delta, renderContext);
+				stateInfo.state.onRender(delta);
+				stateInfo.state.effectManager.onRenderGlobal(delta);
 			}
 		}
 	}

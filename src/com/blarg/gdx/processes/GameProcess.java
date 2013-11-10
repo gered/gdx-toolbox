@@ -5,7 +5,6 @@ import com.blarg.gdx.GameApp;
 import com.blarg.gdx.events.Event;
 import com.blarg.gdx.events.EventHandler;
 import com.blarg.gdx.events.EventManager;
-import com.blarg.gdx.graphics.RenderContext;
 import com.blarg.gdx.states.GameState;
 
 public abstract class GameProcess extends EventHandler implements Disposable {
@@ -55,7 +54,7 @@ public abstract class GameProcess extends EventHandler implements Disposable {
 	public void onResize() {
 	}
 
-	public void onRender(float delta, RenderContext renderContext) {
+	public void onRender(float delta) {
 	}
 
 	public void onUpdate(float delta) {

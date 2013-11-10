@@ -2,7 +2,10 @@ package com.blarg.gdx.graphics.screeneffects;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.blarg.gdx.graphics.RenderContext;
+import com.blarg.gdx.Services;
+import com.blarg.gdx.graphics.ExtendedSpriteBatch;
+import com.blarg.gdx.graphics.SolidColorTextureCache;
+import com.blarg.gdx.graphics.ViewportContext;
 
 public class FadeScreenEffect extends ScreenEffect
 {
@@ -15,8 +18,16 @@ public class FadeScreenEffect extends ScreenEffect
 	float fadeToAlpha;
 	boolean isDoneFading;
 
+	ExtendedSpriteBatch spriteBatch;
+	SolidColorTextureCache solidColorTextures;
+	ViewportContext viewportContext;
+
 	public FadeScreenEffect() {
 		color = new Color();
+
+		spriteBatch = Services.get(ExtendedSpriteBatch.class);
+		solidColorTextures = Services.get(SolidColorTextureCache.class);
+		viewportContext = Services.get(ViewportContext.class);
 	}
 
 	public boolean isDoneFading() {
@@ -54,19 +65,19 @@ public class FadeScreenEffect extends ScreenEffect
 	}
 
 	@Override
-	public void onRender(float delta, RenderContext renderContext)
+	public void onRender(float delta)
 	{
-		Texture texture = renderContext.solidColorTextures.get(Color.WHITE);
+		Texture texture = solidColorTextures.get(Color.WHITE);
 		color.a = alpha;
 
-		renderContext.spriteBatch.begin();
-		renderContext.spriteBatch.setColor(color);
-		renderContext.spriteBatch.draw(
+		spriteBatch.begin();
+		spriteBatch.setColor(color);
+		spriteBatch.draw(
 				texture,
 				0, 0,
-				renderContext.pixelScaler.getScaledWidth(), renderContext.pixelScaler.getScaledHeight()
+				viewportContext.pixelScaler.getScaledWidth(), viewportContext.pixelScaler.getScaledHeight()
 		);
-		renderContext.spriteBatch.end();
+		spriteBatch.end();
 	}
 
 	@Override

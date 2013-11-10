@@ -2,11 +2,10 @@ package com.blarg.gdx.processes;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
+import com.blarg.gdx.ReflectionUtils;
 import com.blarg.gdx.Strings;
 import com.blarg.gdx.events.EventManager;
-import com.blarg.gdx.graphics.RenderContext;
 import com.blarg.gdx.states.GameState;
-import com.blarg.gdx.ReflectionUtils;
 
 import java.util.LinkedList;
 
@@ -189,11 +188,11 @@ public class ProcessManager implements Disposable {
 		}
 	}
 
-	public void onRender(float delta, RenderContext renderContext) {
+	public void onRender(float delta) {
 		for (int i = 0; i < processes.size(); ++i) {
 			ProcessInfo processInfo = processes.get(i);
 			if (!processInfo.isInactive)
-				processInfo.process.onRender(delta, renderContext);
+				processInfo.process.onRender(delta);
 		}
 	}
 

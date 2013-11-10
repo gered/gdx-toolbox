@@ -1,7 +1,6 @@
 package com.blarg.gdx.graphics.screeneffects;
 
 import com.badlogic.gdx.utils.Disposable;
-import com.blarg.gdx.graphics.RenderContext;
 
 import java.util.LinkedList;
 
@@ -104,25 +103,25 @@ public class ScreenEffectManager implements Disposable
 			effects.get(i).effect.onResize();
 	}
 
-	public void onRenderLocal(float delta, RenderContext renderContext) {
+	public void onRenderLocal(float delta) {
 		if (numLocalEffects == 0)
 			return;
 
 		for (int i = 0; i < effects.size(); ++i) {
 			EffectInfo effectInfo = effects.get(i);
 			if (effectInfo.isLocal)
-				effectInfo.effect.onRender(delta, renderContext);
+				effectInfo.effect.onRender(delta);
 		}
 	}
 
-	public void onRenderGlobal(float delta, RenderContext renderContext) {
+	public void onRenderGlobal(float delta) {
 		if (numGlobalEffects == 0)
 			return;
 
 		for (int i = 0; i < effects.size(); ++i) {
 			EffectInfo effectInfo = effects.get(i);
 			if (!effectInfo.isLocal)
-				effectInfo.effect.onRender(delta, renderContext);
+				effectInfo.effect.onRender(delta);
 		}
 	}
 

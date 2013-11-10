@@ -2,7 +2,10 @@ package com.blarg.gdx.graphics.screeneffects;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.blarg.gdx.graphics.RenderContext;
+import com.blarg.gdx.Services;
+import com.blarg.gdx.graphics.ExtendedSpriteBatch;
+import com.blarg.gdx.graphics.SolidColorTextureCache;
+import com.blarg.gdx.graphics.ViewportContext;
 
 public class DimScreenEffect extends ScreenEffect
 {
@@ -14,28 +17,36 @@ public class DimScreenEffect extends ScreenEffect
 
 	Color renderColor;
 
+	ExtendedSpriteBatch spriteBatch;
+	SolidColorTextureCache solidColorTextures;
+	ViewportContext viewportContext;
+
 	public DimScreenEffect()
 	{
 		color = new Color(DEFAULT_DIM_COLOR);
 		alpha = DEFAULT_DIM_ALPHA;
 
 		renderColor = new Color(color);
+
+		spriteBatch = Services.get(ExtendedSpriteBatch.class);
+		solidColorTextures = Services.get(SolidColorTextureCache.class);
+		viewportContext = Services.get(ViewportContext.class);
 	}
 
 	@Override
-	public void onRender(float delta, RenderContext renderContext)
+	public void onRender(float delta)
 	{
 		renderColor.set(color);
 		renderColor.a = alpha;
-		Texture texture = renderContext.solidColorTextures.get(color);
+		Texture texture = solidColorTextures.get(color);
 
-		renderContext.spriteBatch.begin();
-		renderContext.spriteBatch.setColor(renderColor);
-		renderContext.spriteBatch.draw(
+		spriteBatch.begin();
+		spriteBatch.setColor(renderColor);
+		spriteBatch.draw(
 				texture,
 				0, 0,
-				renderContext.pixelScaler.getScaledWidth(), renderContext.pixelScaler.getScaledHeight()
+				viewportContext.pixelScaler.getScaledWidth(), viewportContext.pixelScaler.getScaledHeight()
 		);
-		renderContext.spriteBatch.end();
+		spriteBatch.end();
 	}
 }

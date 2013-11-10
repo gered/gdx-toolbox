@@ -5,7 +5,6 @@ import com.blarg.gdx.entities.systemcomponents.EntityPresetComponent;
 import com.blarg.gdx.entities.systemcomponents.InactiveComponent;
 import com.blarg.gdx.events.EventManager;
 import com.blarg.gdx.ReflectionUtils;
-import com.blarg.gdx.graphics.RenderContext;
 
 public class EntityManager implements Disposable {
 	public final EventManager eventManager;
@@ -293,9 +292,9 @@ public class EntityManager implements Disposable {
 			componentSystems.get(i).onResize();
 	}
 
-	public void onRender(float delta, RenderContext renderContext) {
+	public void onRender(float delta) {
 		for (int i = 0; i < componentSystems.size; ++i)
-			componentSystems.get(i).onRender(delta, renderContext);
+			componentSystems.get(i).onRender(delta);
 	}
 
 	public void onUpdate(float delta) {

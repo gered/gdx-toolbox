@@ -5,7 +5,6 @@ import com.blarg.gdx.GameApp;
 import com.blarg.gdx.events.Event;
 import com.blarg.gdx.events.EventHandler;
 import com.blarg.gdx.events.EventManager;
-import com.blarg.gdx.graphics.RenderContext;
 import com.blarg.gdx.graphics.screeneffects.ScreenEffectManager;
 import com.blarg.gdx.processes.ProcessManager;
 
@@ -80,12 +79,12 @@ public abstract class GameState extends EventHandler implements Disposable {
 		effectManager.onResize();
 	}
 
-	public void onRender(float delta, RenderContext renderContext) {
+	public void onRender(float delta) {
 		// switch it up and do effects before processes here so that processes
 		// (which would commonly be used for UI overlay elements) don't get
 		// overwritten by local effects (e.g. flashes, etc.)
-		effectManager.onRenderLocal(delta, renderContext);
-		processManager.onRender(delta, renderContext);
+		effectManager.onRenderLocal(delta);
+		processManager.onRender(delta);
 	}
 
 	public void onUpdate(float delta) {
