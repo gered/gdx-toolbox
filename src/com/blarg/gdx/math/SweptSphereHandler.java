@@ -60,7 +60,12 @@ public class SweptSphereHandler {
 	static final Vector3 esPosition = new Vector3();
 	static final Vector3 esVelocity = new Vector3();
 	static final Vector3 resultingVelocity = new Vector3();
-	public void handleMovement(SweptSphere sphere, Vector3 velocity, Vector3 outVelocity, boolean canSlide, boolean onlySlideIfTooSteep, float tooSteepAngleY) {
+	public void handleMovement(SweptSphere sphere,
+	                           Vector3 velocity,
+	                           Vector3 outVelocity,
+	                           boolean canSlide,
+	                           boolean onlySlideIfTooSteep,
+	                           float tooSteepAngleY) {
 		// don't attempt to process movement if the entity is not moving!
 		if (velocity.len2() > 0.0f) {
 			// calculate maximum possible collision area (world space)
@@ -89,6 +94,45 @@ public class SweptSphereHandler {
 		}
 		else
 			outVelocity.set(Vector3.Zero);
+	}
+
+	public void handleBasicMovementCollision(SweptSphere sphere,
+	                                         Vector3 velocity,
+	                                         Vector3 outVelocity) {
+		// don't attempt to process movement if the entity is not moving!
+		if (velocity.len2() > 0.0f) {
+			// calculate maximum possible collision area (world space)
+			calculatePossibleCollisionArea(sphere, velocity);
+
+			// convert position and velocity to ellipsoid space
+			sphere.toEllipsoidSpace(sphere.position, sphere.esPosition);
+			sphere.toEllipsoidSpace(velocity, sphere.esVelocity);
+
+			// check for and respond to collisions along this velocity vector
+			sphere.nearestCollisionDistance = 0.0f;
+			sphere.nearestCollisionPoint.set(Vector3.Zero);
+			sphere.foundCollision = false;
+			sphere.esIntersectionPoint.set(Vector3.Zero);
+			sphere.esNormalizedVelocity.set(sphere.esVelocity).nor();
+
+			// perform simple collision check
+			collisionChecker.checkForCollisions(sphere, possibleCollisionArea);
+
+			// if there was no collision, simply move along the velocity vector. if there was a collision
+			// then we just simple stop and don't even attempt to move at all
+			if (!sphere.foundCollision) {
+				sphere.position.set(sphere.esPosition).add(sphere.esVelocity);
+				outVelocity.set(velocity);   // keep the original input velocity as well
+			} else {
+				sphere.position.set(sphere.esPosition);
+				outVelocity.set(Vector3.Zero);
+			}
+
+			// convert the intersection point (if there was one) and the new position back from ellipsoid space
+			sphere.fromEllipsoidSpace(sphere.position);
+			if (sphere.foundCollision)
+				sphere.fromEllipsoidSpace(sphere.esIntersectionPoint, sphere.nearestCollisionPoint);
+		}
 	}
 
 	static final Vector3 resultingPosition = new Vector3();
