@@ -180,6 +180,13 @@ public class EntityManager implements Disposable {
 		entities.clear();
 	}
 
+	public boolean isValid(Entity entity) {
+		if (entity == null)
+			return false;
+		else
+			return entities.contains(entity);
+	}
+
 	/*** public Entity Component management ***/
 
 	public <T extends Component> T addComponent(Class<T> componentType, Entity entity) {
