@@ -1,10 +1,10 @@
 package com.blarg.gdx.entities;
 
 import com.badlogic.gdx.utils.*;
+import com.blarg.gdx.ReflectionUtils;
 import com.blarg.gdx.entities.systemcomponents.EntityPresetComponent;
 import com.blarg.gdx.entities.systemcomponents.InactiveComponent;
 import com.blarg.gdx.events.EventManager;
-import com.blarg.gdx.ReflectionUtils;
 
 public class EntityManager implements Disposable {
 	public final EventManager eventManager;
@@ -101,10 +101,17 @@ public class EntityManager implements Disposable {
 	}
 
 	public <T extends EntityPreset> void removePreset(Class<T> presetType) {
+		EntityPreset preset = presets.get(presetType);
 		presets.remove(presetType);
+		if (Disposable.class.isInstance(preset))
+			((Disposable)preset).dispose();
 	}
 
 	public void removeAllPresets() {
+		for (ObjectMap.Entry<Class<? extends EntityPreset>, EntityPreset> i : presets.entries()) {
+			if (Disposable.class.isInstance(i.value))
+				((Disposable)i.value).dispose();
+		}
 		presets.clear();
 	}
 
