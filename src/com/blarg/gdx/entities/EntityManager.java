@@ -124,10 +124,10 @@ public class EntityManager implements Disposable {
 	}
 
 	public <T extends EntityPreset> Entity addUsingPreset(Class<T> presetType) {
-		return addusingPreset(presetType, null);
+		return addUsingPreset(presetType, null);
 	}
 
-	public <T extends EntityPreset> Entity addusingPreset(Class<T> presetType, EntityPreset.CreationArgs args) {
+	public <T extends EntityPreset> Entity addUsingPreset(Class<T> presetType, EntityPreset.CreationArgs args) {
 		EntityPreset preset = presets.get(presetType);
 		if (preset == null)
 			throw new IllegalArgumentException("Cannot add entity using an unregistered EntityPreset.");
