@@ -1,7 +1,5 @@
 package com.blarg.gdx.graphics;
 
-import java.util.Comparator;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL10;
@@ -13,6 +11,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Pool;
+
+import java.util.Comparator;
 
 /**
  * <p>
@@ -91,24 +91,30 @@ public class AlphaTestCameraGroupStrategy implements GroupStrategy, Disposable {
 	private final Comparator<Decal> cameraSorter;
 
 	public AlphaTestCameraGroupStrategy (final Camera camera) {
-		this(camera, new Comparator<Decal>() {
+		if (!Gdx.graphics.isGL20Available())
+			throw new UnsupportedOperationException("AlphaTestCameraGroupStrategy requires shader support.");
+
+		this.camera = camera;
+		createDefaultShader();
+
+		final AlphaTestCameraGroupStrategy that = this;
+		this.cameraSorter = new Comparator<Decal>() {
 			@Override
 			public int compare (Decal o1, Decal o2) {
-				float dist1 = camera.position.dst(o1.getPosition());
-				float dist2 = camera.position.dst(o2.getPosition());
+				float dist1 = that.camera.position.dst(o1.getPosition());
+				float dist2 = that.camera.position.dst(o2.getPosition());
 				return (int)Math.signum(dist2 - dist1);
 			}
-		});
+		};
 	}
 
-	public AlphaTestCameraGroupStrategy(Camera camera, Comparator<Decal> sorter) {
+	public AlphaTestCameraGroupStrategy (Camera camera, Comparator<Decal> sorter) {
 		if (!Gdx.graphics.isGL20Available())
 			throw new UnsupportedOperationException("AlphaTestCameraGroupStrategy requires shader support.");
 
 		this.camera = camera;
 		this.cameraSorter = sorter;
 		createDefaultShader();
-
 	}
 
 	public void setCamera (Camera camera) {
