@@ -231,7 +231,8 @@ public class EntityManager implements Disposable {
 			return;
 
 		Component component = componentEntities.remove(entity);
-		Pools.free(component);
+		if (component != null)
+			Pools.free(component);
 	}
 
 	public <T extends Component> boolean hasComponent(Class<T> componentType, Entity entity) {
