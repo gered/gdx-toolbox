@@ -3,7 +3,7 @@ apply plugin: "maven"
 apply plugin: "eclipse"
 apply plugin: "idea"
 
-group = "com.blarg.gdx"
+group = "ca.blarg.gdx"
 version = "0.1-SNAPSHOT"
 ext.appName = "gdx-toolbox"
 ext.gdxVersion = "0.9.9"
