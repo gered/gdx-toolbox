@@ -2,8 +2,19 @@ package ca.blarg.gdx;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.TimeUtils;
 
-public class GdxGameAppListener implements ApplicationListener {
+public class GdxGameAppListener implements ApplicationListener, GameLooper {
+	int updatesPerSecond;
+	int updateFrequency;
+	int maxFrameSkip;
+
+	long nextTick = 0;
+	int loops;
+
+	float updateDelta = 0.0f;
+	float renderDelta = 0.0f;
+
 	Class<? extends GameApp> gameAppType;
 	GameApp gameApp;
 
@@ -15,6 +26,10 @@ public class GdxGameAppListener implements ApplicationListener {
 	public void create() {
 		Gdx.app.debug("GdxGameAppListener", "create");
 		Gdx.app.debug("GdxGameAppListener", String.format("Application type: %s", Gdx.app.getType()));
+
+		Services.register(GameLooper.class, this);
+
+		setTiming(20, 5);
 
 		try {
 			gameApp = gameAppType.newInstance();
@@ -30,6 +45,8 @@ public class GdxGameAppListener implements ApplicationListener {
 		}
 
 		gameApp.onCreate();
+
+		nextTick = TimeUtils.millis();
 	}
 
 	@Override
@@ -40,10 +57,17 @@ public class GdxGameAppListener implements ApplicationListener {
 
 	@Override
 	public void render() {
-		// TODO: probably not the best idea to share the same delta with both renders and updates...
-		float delta = Gdx.graphics.getDeltaTime();
-		gameApp.onUpdate(delta);
-		gameApp.onRender(delta);
+		loops = 0;
+		while (TimeUtils.millis() > nextTick && loops < maxFrameSkip) {
+			gameApp.onUpdate(updateDelta);
+
+			nextTick += updateFrequency;
+			++loops;
+		}
+
+		renderDelta = (float)(TimeUtils.millis() + updateFrequency - nextTick) / (float)updateFrequency;
+
+		gameApp.onRender(renderDelta);
 	}
 
 	@Override
@@ -63,5 +87,28 @@ public class GdxGameAppListener implements ApplicationListener {
 		Gdx.app.debug("GdxGameAppListener", "dispose");
 		if (gameApp != null)
 			gameApp.dispose();
+	}
+
+	@Override
+	public void setTiming(int updatesPerSecond, int maxFrameSkip) {
+		this.updatesPerSecond = updatesPerSecond;
+		updateFrequency = 1000 / this.updatesPerSecond;
+		this.maxFrameSkip = maxFrameSkip;
+		this.updateDelta = updateFrequency / 1000.0f;
+	}
+
+	@Override
+	public int getUpdateFrequency() {
+		return updateFrequency;
+	}
+
+	@Override
+	public float getUpdateDelta() {
+		return updateDelta;
+	}
+
+	@Override
+	public float getRenderDelta() {
+		return renderDelta;
 	}
 }
