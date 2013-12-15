@@ -20,7 +20,17 @@ public class Services {
 		if (service == null)
 			throw new IllegalArgumentException("service can not be null.");
 
-		Class<?> type = service.getClass();
+		register(service.getClass(), service);
+	}
+
+	public static void register(Class<?> type, Object service) {
+		if (type == null)
+			throw new IllegalArgumentException("type can not be null.");
+		if (service == null)
+			throw new IllegalArgumentException("service can not be null.");
+		if (!type.isInstance(service))
+			throw new IllegalArgumentException("service object is not of the type specified.");
+
 		if (services.containsKey(type))
 			throw new UnsupportedOperationException("Another service of this type has already been registered.");
 
