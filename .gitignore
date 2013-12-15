@@ -7,6 +7,7 @@ build/
 .settings/
 .project
 .classpath
+.idea
 *.iml
 *.eml
 *.ipr
