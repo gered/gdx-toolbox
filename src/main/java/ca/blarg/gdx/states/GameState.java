@@ -79,12 +79,12 @@ public abstract class GameState extends EventHandler implements Disposable {
 		effectManager.onResize();
 	}
 
-	public void onRender(float delta) {
+	public void onRender(float interpolation) {
 		// switch it up and do effects before processes here so that processes
 		// (which would commonly be used for UI overlay elements) don't get
 		// overwritten by local effects (e.g. flashes, etc.)
-		effectManager.onRenderLocal(delta);
-		processManager.onRender(delta);
+		effectManager.onRenderLocal(interpolation);
+		processManager.onRender(interpolation);
 	}
 
 	public void onUpdateGameState(float delta) {

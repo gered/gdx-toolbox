@@ -8,10 +8,10 @@ public class GdxGameAppListener implements ApplicationListener, GameLooper {
 	int updateFrequency;
 	float maxFrameTime;
 
-	float accumulator;
+	float accumulator = 0.0f;
 
 	float updateDelta = 0.0f;
-	float renderDelta = 0.0f;
+	float renderInterpolation = 0.0f;
 
 	Class<? extends GameApp> gameAppType;
 	GameApp gameApp;
@@ -65,10 +65,10 @@ public class GdxGameAppListener implements ApplicationListener, GameLooper {
 			accumulator -= updateDelta;
 		}
 
-		renderDelta = accumulator / updateDelta;
+		renderInterpolation = accumulator / updateDelta;
 
 		gameApp.onUpdateFrame(frameTime);
-		gameApp.onRender(renderDelta);
+		gameApp.onRender(renderInterpolation);
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class GdxGameAppListener implements ApplicationListener, GameLooper {
 	}
 
 	@Override
-	public float getRenderDelta() {
-		return renderDelta;
+	public float getRenderInterpolation() {
+		return renderInterpolation;
 	}
 }

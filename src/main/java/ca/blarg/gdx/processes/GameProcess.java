@@ -54,7 +54,7 @@ public abstract class GameProcess extends EventHandler implements Disposable {
 	public void onResize() {
 	}
 
-	public void onRender(float delta) {
+	public void onRender(float interpolation) {
 	}
 
 	public void onUpdateGameState(float delta) {

@@ -188,11 +188,11 @@ public class ProcessManager implements Disposable {
 		}
 	}
 
-	public void onRender(float delta) {
+	public void onRender(float interpolation) {
 		for (int i = 0; i < processes.size(); ++i) {
 			ProcessInfo processInfo = processes.get(i);
 			if (!processInfo.isInactive)
-				processInfo.process.onRender(delta);
+				processInfo.process.onRender(interpolation);
 		}
 	}
 

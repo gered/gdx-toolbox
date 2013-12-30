@@ -307,9 +307,9 @@ public class EntityManager implements Disposable {
 			componentSystems.get(i).onResize();
 	}
 
-	public void onRender(float delta) {
+	public void onRender(float interpolation) {
 		for (int i = 0; i < componentSystems.size; ++i)
-			componentSystems.get(i).onRender(delta);
+			componentSystems.get(i).onRender(interpolation);
 	}
 
 	public void onUpdateGameState(float delta) {

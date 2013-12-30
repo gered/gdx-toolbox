@@ -253,12 +253,12 @@ public class StateManager implements Disposable {
 		}
 	}
 
-	public void onRender(float delta) {
+	public void onRender(float interpolation) {
 		for (int i = getTopNonOverlayIndex(); i != -1 && i < states.size(); ++i) {
 			StateInfo stateInfo = states.get(i);
 			if (!stateInfo.isInactive) {
-				stateInfo.state.onRender(delta);
-				stateInfo.state.effectManager.onRenderGlobal(delta);
+				stateInfo.state.onRender(interpolation);
+				stateInfo.state.effectManager.onRenderGlobal(interpolation);
 			}
 		}
 	}

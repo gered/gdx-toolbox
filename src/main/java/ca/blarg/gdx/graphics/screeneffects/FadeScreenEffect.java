@@ -65,7 +65,7 @@ public class FadeScreenEffect extends ScreenEffect
 	}
 
 	@Override
-	public void onRender(float delta)
+	public void onRender(float interpolation)
 	{
 		Texture texture = solidColorTextures.get(Color.WHITE);
 		color.a = alpha;

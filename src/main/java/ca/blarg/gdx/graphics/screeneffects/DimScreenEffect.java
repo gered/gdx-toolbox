@@ -6,10 +6,6 @@ import ca.blarg.gdx.graphics.SolidColorTextureCache;
 import ca.blarg.gdx.graphics.ViewportContext;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import ca.blarg.gdx.Services;
-import ca.blarg.gdx.graphics.ExtendedSpriteBatch;
-import ca.blarg.gdx.graphics.SolidColorTextureCache;
-import ca.blarg.gdx.graphics.ViewportContext;
 
 public class DimScreenEffect extends ScreenEffect
 {
@@ -38,7 +34,7 @@ public class DimScreenEffect extends ScreenEffect
 	}
 
 	@Override
-	public void onRender(float delta)
+	public void onRender(float interpolation)
 	{
 		renderColor.set(color);
 		renderColor.a = alpha;

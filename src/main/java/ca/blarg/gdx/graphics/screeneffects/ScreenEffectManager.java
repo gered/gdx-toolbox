@@ -103,25 +103,25 @@ public class ScreenEffectManager implements Disposable
 			effects.get(i).effect.onResize();
 	}
 
-	public void onRenderLocal(float delta) {
+	public void onRenderLocal(float interpolation) {
 		if (numLocalEffects == 0)
 			return;
 
 		for (int i = 0; i < effects.size(); ++i) {
 			EffectInfo effectInfo = effects.get(i);
 			if (effectInfo.isLocal)
-				effectInfo.effect.onRender(delta);
+				effectInfo.effect.onRender(interpolation);
 		}
 	}
 
-	public void onRenderGlobal(float delta) {
+	public void onRenderGlobal(float interpolation) {
 		if (numGlobalEffects == 0)
 			return;
 
 		for (int i = 0; i < effects.size(); ++i) {
 			EffectInfo effectInfo = effects.get(i);
 			if (!effectInfo.isLocal)
-				effectInfo.effect.onRender(delta);
+				effectInfo.effect.onRender(interpolation);
 		}
 	}
 

@@ -6,5 +6,5 @@ public interface GameLooper {
 	int getUpdateFrequency();
 
 	float getUpdateDelta();
-	float getRenderDelta();
+	float getRenderInterpolation();
 }
