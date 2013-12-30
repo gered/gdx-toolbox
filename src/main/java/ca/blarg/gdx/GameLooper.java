@@ -1,7 +1,7 @@
 package ca.blarg.gdx;
 
 public interface GameLooper {
-	void setTiming(int updatesPerSecond, int maxFrameSkip);
+	void setTiming(int updatesPerSecond, float maxFrameTimeSeconds);
 
 	int getUpdateFrequency();
 

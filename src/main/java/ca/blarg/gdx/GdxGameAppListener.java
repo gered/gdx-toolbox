@@ -2,15 +2,13 @@ package ca.blarg.gdx;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.TimeUtils;
 
 public class GdxGameAppListener implements ApplicationListener, GameLooper {
 	int updatesPerSecond;
 	int updateFrequency;
-	int maxFrameSkip;
+	float maxFrameTime;
 
-	long nextTick = 0;
-	int loops;
+	float accumulator;
 
 	float updateDelta = 0.0f;
 	float renderDelta = 0.0f;
@@ -29,7 +27,7 @@ public class GdxGameAppListener implements ApplicationListener, GameLooper {
 
 		Services.register(GameLooper.class, this);
 
-		setTiming(20, 5);
+		setTiming(20, 0.25f);
 
 		try {
 			gameApp = gameAppType.newInstance();
@@ -46,7 +44,6 @@ public class GdxGameAppListener implements ApplicationListener, GameLooper {
 
 		gameApp.onCreate();
 
-		nextTick = TimeUtils.millis();
 	}
 
 	@Override
@@ -57,15 +54,18 @@ public class GdxGameAppListener implements ApplicationListener, GameLooper {
 
 	@Override
 	public void render() {
-		loops = 0;
-		while (TimeUtils.millis() > nextTick && loops < maxFrameSkip) {
-			gameApp.onUpdate(updateDelta);
+		float frameTime = Gdx.graphics.getRawDeltaTime();
+		if (frameTime > maxFrameTime)
+			frameTime = maxFrameTime;
 
-			nextTick += updateFrequency;
-			++loops;
+		accumulator += frameTime;
+
+		while (accumulator >= updateDelta) {
+			gameApp.onUpdate(updateDelta);
+			accumulator -= updateDelta;
 		}
 
-		renderDelta = (float)(TimeUtils.millis() + updateFrequency - nextTick) / (float)updateFrequency;
+		renderDelta = accumulator / updateDelta;
 
 		gameApp.onRender(renderDelta);
 	}
@@ -90,11 +90,11 @@ public class GdxGameAppListener implements ApplicationListener, GameLooper {
 	}
 
 	@Override
-	public void setTiming(int updatesPerSecond, int maxFrameSkip) {
+	public void setTiming(int updatesPerSecond, float maxFrameTimeSeconds) {
 		this.updatesPerSecond = updatesPerSecond;
 		updateFrequency = 1000 / this.updatesPerSecond;
-		this.maxFrameSkip = maxFrameSkip;
 		this.updateDelta = updateFrequency / 1000.0f;
+		this.maxFrameTime = maxFrameTimeSeconds;
 	}
 
 	@Override
