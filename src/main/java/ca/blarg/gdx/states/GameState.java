@@ -88,11 +88,12 @@ public abstract class GameState extends EventHandler implements Disposable {
 	}
 
 	public void onUpdateGameState(float delta) {
+		effectManager.onUpdateGameState(delta);
 		processManager.onUpdateGameState(delta);
 	}
 
 	public void onUpdateFrame(float delta) {
-		effectManager.onUpdate(delta);
+		effectManager.onUpdateFrame(delta);
 		processManager.onUpdateFrame(delta);
 	}
 

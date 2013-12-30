@@ -28,7 +28,10 @@ public abstract class ScreenEffect implements Disposable
 	public void onRender(float delta) {
 	}
 
-	public void onUpdate(float delta) {
+	public void onUpdateGameState(float delta) {
+	}
+
+	public void onUpdateFrame(float delta) {
 	}
 
 	public void dispose() {

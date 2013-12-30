@@ -2,12 +2,10 @@ package ca.blarg.gdx.graphics.screeneffects;
 
 import ca.blarg.gdx.Services;
 import ca.blarg.gdx.graphics.ExtendedSpriteBatch;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import ca.blarg.gdx.Services;
-import ca.blarg.gdx.graphics.ExtendedSpriteBatch;
 import ca.blarg.gdx.graphics.SolidColorTextureCache;
 import ca.blarg.gdx.graphics.ViewportContext;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 
 public class FadeScreenEffect extends ScreenEffect
 {
@@ -83,7 +81,7 @@ public class FadeScreenEffect extends ScreenEffect
 	}
 
 	@Override
-	public void onUpdate(float delta)
+	public void onUpdateFrame(float delta)
 	{
 		if (isDoneFading)
 			return;

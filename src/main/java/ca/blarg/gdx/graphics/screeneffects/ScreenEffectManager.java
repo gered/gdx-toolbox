@@ -125,7 +125,7 @@ public class ScreenEffectManager implements Disposable
 		}
 	}
 
-	public void onUpdate(float delta) {
+	public void onUpdateGameState(float delta) {
 		int i = 0;
 		while (i < effects.size()) {
 			EffectInfo effectInfo = effects.get(i);
@@ -133,10 +133,15 @@ public class ScreenEffectManager implements Disposable
 				// index doesn't change, we're removing one, so next index now equals this index
 				remove(i);
 			} else {
-				effectInfo.effect.onUpdate(delta);
+				effectInfo.effect.onUpdateFrame(delta);
 				++i;
 			}
 		}
+	}
+
+	public void onUpdateFrame(float delta) {
+		for (int i = 0; i < effects.size(); ++i)
+			effects.get(i).effect.onUpdateFrame(delta);
 	}
 
 	/*** misc ***/
