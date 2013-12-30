@@ -1,14 +1,11 @@
 package ca.blarg.gdx.processes;
 
 import ca.blarg.gdx.GameApp;
-import ca.blarg.gdx.events.EventHandler;
-import ca.blarg.gdx.states.GameState;
-import com.badlogic.gdx.utils.Disposable;
-import ca.blarg.gdx.GameApp;
 import ca.blarg.gdx.events.Event;
 import ca.blarg.gdx.events.EventHandler;
 import ca.blarg.gdx.events.EventManager;
 import ca.blarg.gdx.states.GameState;
+import com.badlogic.gdx.utils.Disposable;
 
 public abstract class GameProcess extends EventHandler implements Disposable {
 	public final ProcessManager processManager;
@@ -60,7 +57,10 @@ public abstract class GameProcess extends EventHandler implements Disposable {
 	public void onRender(float delta) {
 	}
 
-	public void onUpdate(float delta) {
+	public void onUpdateGameState(float delta) {
+	}
+
+	public void onUpdateFrame(float delta) {
 	}
 
 	public boolean onTransition(float delta, boolean isTransitioningOut, boolean started) {

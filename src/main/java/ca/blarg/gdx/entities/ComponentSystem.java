@@ -1,10 +1,9 @@
 package ca.blarg.gdx.entities;
 
-import ca.blarg.gdx.events.EventHandler;
-import com.badlogic.gdx.utils.Disposable;
 import ca.blarg.gdx.events.Event;
 import ca.blarg.gdx.events.EventHandler;
 import ca.blarg.gdx.events.EventManager;
+import com.badlogic.gdx.utils.Disposable;
 
 public abstract class ComponentSystem extends EventHandler implements Disposable {
 	public final EntityManager entityManager;
@@ -29,7 +28,10 @@ public abstract class ComponentSystem extends EventHandler implements Disposable
 	public void onRender(float delta) {
 	}
 
-	public void onUpdate(float delta) {
+	public void onUpdateGameState(float delta) {
+	}
+
+	public void onUpdateFrame(float delta) {
 	}
 
 	@Override

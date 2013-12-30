@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
-import ca.blarg.gdx.math.MathHelpers;
 
 /**
  * Manages graphics state relating to the viewport dimensions and camera(s).
@@ -60,7 +59,7 @@ public class ViewportContext {
 
 	}
 
-	public void onUpdate(float delta) {
+	public void onUpdateFrame(float delta) {
 		perspectiveCamera.update();
 		orthographicCamera.update();
 	}

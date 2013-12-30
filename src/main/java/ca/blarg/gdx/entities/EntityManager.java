@@ -3,11 +3,8 @@ package ca.blarg.gdx.entities;
 import ca.blarg.gdx.ReflectionUtils;
 import ca.blarg.gdx.entities.systemcomponents.EntityPresetComponent;
 import ca.blarg.gdx.entities.systemcomponents.InactiveComponent;
-import com.badlogic.gdx.utils.*;
-import ca.blarg.gdx.ReflectionUtils;
-import ca.blarg.gdx.entities.systemcomponents.EntityPresetComponent;
-import ca.blarg.gdx.entities.systemcomponents.InactiveComponent;
 import ca.blarg.gdx.events.EventManager;
+import com.badlogic.gdx.utils.*;
 
 public class EntityManager implements Disposable {
 	public final EventManager eventManager;
@@ -315,12 +312,17 @@ public class EntityManager implements Disposable {
 			componentSystems.get(i).onRender(delta);
 	}
 
-	public void onUpdate(float delta) {
+	public void onUpdateGameState(float delta) {
 		for (Entity i : getAllWith(InactiveComponent.class))
 			remove(i);
 
 		for (int i = 0; i < componentSystems.size; ++i)
-			componentSystems.get(i).onUpdate(delta);
+			componentSystems.get(i).onUpdateGameState(delta);
+	}
+
+	public void onUpdateFrame(float delta) {
+		for (int i = 0; i < componentSystems.size; ++i)
+			componentSystems.get(i).onUpdateFrame(delta);
 	}
 
 	/*** private Entity/Component management ***/

@@ -6,10 +6,6 @@ import ca.blarg.gdx.events.EventManager;
 import ca.blarg.gdx.states.GameState;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Disposable;
-import ca.blarg.gdx.ReflectionUtils;
-import ca.blarg.gdx.Strings;
-import ca.blarg.gdx.events.EventManager;
-import ca.blarg.gdx.states.GameState;
 
 import java.util.LinkedList;
 
@@ -200,7 +196,7 @@ public class ProcessManager implements Disposable {
 		}
 	}
 
-	public void onUpdate(float delta) {
+	public void onUpdateGameState(float delta) {
 		cleanupInactiveProcesses();
 		checkForFinishedProcesses();
 		processQueue();
@@ -209,7 +205,15 @@ public class ProcessManager implements Disposable {
 		for (int i = 0; i < processes.size(); ++i) {
 			ProcessInfo processInfo = processes.get(i);
 			if (!processInfo.isInactive)
-				processInfo.process.onUpdate(delta);
+				processInfo.process.onUpdateGameState(delta);
+		}
+	}
+
+	public void onUpdateFrame(float delta) {
+		for (int i = 0; i < processes.size(); ++i) {
+			ProcessInfo processInfo = processes.get(i);
+			if (!processInfo.isInactive)
+				processInfo.process.onUpdateFrame(delta);
 		}
 	}
 

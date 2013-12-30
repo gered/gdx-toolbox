@@ -61,12 +61,13 @@ public class GdxGameAppListener implements ApplicationListener, GameLooper {
 		accumulator += frameTime;
 
 		while (accumulator >= updateDelta) {
-			gameApp.onUpdate(updateDelta);
+			gameApp.onUpdateGameState(updateDelta);
 			accumulator -= updateDelta;
 		}
 
 		renderDelta = accumulator / updateDelta;
 
+		gameApp.onUpdateFrame(frameTime);
 		gameApp.onRender(renderDelta);
 	}
 

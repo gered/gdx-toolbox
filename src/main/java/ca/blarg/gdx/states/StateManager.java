@@ -1,12 +1,11 @@
 package ca.blarg.gdx.states;
 
-import ca.blarg.gdx.ReflectionUtils;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.Disposable;
 import ca.blarg.gdx.GameApp;
 import ca.blarg.gdx.ReflectionUtils;
 import ca.blarg.gdx.Strings;
 import ca.blarg.gdx.events.EventManager;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Disposable;
 
 import java.util.LinkedList;
 
@@ -264,7 +263,7 @@ public class StateManager implements Disposable {
 		}
 	}
 
-	public void onUpdate(float delta) {
+	public void onUpdateGameState(float delta) {
 		lastCleanedStatesWereAllOverlays = false;
 
 		cleanupInactiveStates();
@@ -276,7 +275,15 @@ public class StateManager implements Disposable {
 		for (int i = getTopNonOverlayIndex(); i != -1 && i < states.size(); ++i) {
 			StateInfo stateInfo = states.get(i);
 			if (!stateInfo.isInactive)
-				stateInfo.state.onUpdate(delta);
+				stateInfo.state.onUpdateGameState(delta);
+		}
+	}
+
+	public void onUpdateFrame(float delta) {
+		for (int i = getTopNonOverlayIndex(); i != -1 && i < states.size(); ++i) {
+			StateInfo stateInfo = states.get(i);
+			if (!stateInfo.isInactive)
+				stateInfo.state.onUpdateFrame(delta);
 		}
 	}
 

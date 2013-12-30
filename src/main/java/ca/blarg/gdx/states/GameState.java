@@ -1,15 +1,12 @@
 package ca.blarg.gdx.states;
 
 import ca.blarg.gdx.GameApp;
-import ca.blarg.gdx.events.EventHandler;
-import ca.blarg.gdx.graphics.screeneffects.ScreenEffectManager;
-import com.badlogic.gdx.utils.Disposable;
-import ca.blarg.gdx.GameApp;
 import ca.blarg.gdx.events.Event;
 import ca.blarg.gdx.events.EventHandler;
 import ca.blarg.gdx.events.EventManager;
 import ca.blarg.gdx.graphics.screeneffects.ScreenEffectManager;
 import ca.blarg.gdx.processes.ProcessManager;
+import com.badlogic.gdx.utils.Disposable;
 
 public abstract class GameState extends EventHandler implements Disposable {
 	public final StateManager stateManager;
@@ -90,9 +87,13 @@ public abstract class GameState extends EventHandler implements Disposable {
 		processManager.onRender(delta);
 	}
 
-	public void onUpdate(float delta) {
+	public void onUpdateGameState(float delta) {
+		processManager.onUpdateGameState(delta);
+	}
+
+	public void onUpdateFrame(float delta) {
 		effectManager.onUpdate(delta);
-		processManager.onUpdate(delta);
+		processManager.onUpdateFrame(delta);
 	}
 
 	public boolean onTransition(float delta, boolean isTransitioningOut, boolean started) {

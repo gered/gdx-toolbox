@@ -1,5 +1,6 @@
 package ca.blarg.gdx;
 
+import ca.blarg.gdx.events.EventManager;
 import ca.blarg.gdx.graphics.*;
 import ca.blarg.gdx.states.StateManager;
 import com.badlogic.gdx.Gdx;
@@ -7,8 +8,6 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.TimeUtils;
-import ca.blarg.gdx.events.EventManager;
-import ca.blarg.gdx.states.StateManager;
 
 public abstract class GameApp implements Disposable {
 	public final EventManager eventManager;
@@ -71,10 +70,9 @@ public abstract class GameApp implements Disposable {
 		viewportContext.onPostRender();
 	}
 
-	public void onUpdate(float delta) {
-		viewportContext.onUpdate(delta);
+	public void onUpdateGameState(float delta) {
 		eventManager.onUpdate(delta);
-		stateManager.onUpdate(delta);
+		stateManager.onUpdateGameState(delta);
 		if (stateManager.isEmpty()) {
 			Gdx.app.debug("GameApp", "No states running. Quitting.");
 			Gdx.app.exit();
@@ -88,6 +86,11 @@ public abstract class GameApp implements Disposable {
 				Gdx.app.debug("GameApp", String.format("Heap memory usage: %d", Gdx.app.getJavaHeap()));
 			}
 		}
+	}
+
+	public void onUpdateFrame(float delta) {
+		viewportContext.onUpdateFrame(delta);
+		stateManager.onUpdateFrame(delta);
 	}
 
 	public void onPause() {
