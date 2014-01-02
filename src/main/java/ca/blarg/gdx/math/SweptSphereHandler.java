@@ -119,12 +119,17 @@ public class SweptSphereHandler {
 			collisionChecker.checkForCollisions(sphere, possibleCollisionArea);
 
 			// if there was no collision, simply move along the velocity vector. if there was a collision
-			// then we just simple stop and don't even attempt to move at all
+			// then we just move right up to the collision but don't attempt any sliding or anything like that
 			if (!sphere.foundCollision) {
 				sphere.position.set(sphere.esPosition).add(sphere.esVelocity);
 				outVelocity.set(velocity);   // keep the original input velocity as well
 			} else {
-				sphere.position.set(sphere.esPosition);
+				if (sphere.nearestCollisionDistance >= collisionVeryCloseDistance) {
+					// not quite at the collision point yet, so lets move up so we are at it
+					getMoveUpToCollisionVector(sphere, velocity, tmp1);
+					sphere.position.set(sphere.esPosition).add(tmp1);
+				}
+				// either way, the resulting velocity will be zero, as we are now right next to the collision point
 				outVelocity.set(Vector3.Zero);
 			}
 
@@ -178,21 +183,7 @@ public class SweptSphereHandler {
 		if (sphere.nearestCollisionDistance >= collisionVeryCloseDistance) {
 			// we haven't yet moved up too close to the nearest collision, so
 			// let's inch forward a bit
-
-			// figure out the new position that we need to move up to
-			float moveUpLength = sphere.nearestCollisionDistance - collisionVeryCloseDistance;
-
-			// HACK: if the above length ends up being 0, "v" calculated below will
-			//       end up with "NaN" x/y/z components which will eventually cause
-			//       the resulting position from all this being "NaN" and the entity
-			//       will seem to disappear entirely. If we catch this zero length
-			//       condition and recalculate it so that the length is non-zero but
-			//       still very small (below the VERY_CLOSE_DISTANCE threshold) then
-			//       it appears to work fine.
-			if (moveUpLength == 0.0f)
-				moveUpLength = sphere.nearestCollisionDistance - (collisionVeryCloseDistance * 0.5f);
-
-			MathHelpers.setLengthOf(tmp1.set(velocity), moveUpLength);
+			getMoveUpToCollisionVector(sphere, velocity, tmp1);
 			tmpNewPosition.set(sphere.esPosition)
 			              .add(tmp1);
 
@@ -241,6 +232,22 @@ public class SweptSphereHandler {
 		// recurse
 		++recursionDepth;
 		return getNewPositionForMovement(recursionDepth, sphere, tmpNewPosition, tmpNewVelocity, responseVelocity, canSlide, onlySlideIfTooSteep, tooSteepAngleY);
+	}
+
+	private void getMoveUpToCollisionVector(SweptSphere sphere, Vector3 velocity, Vector3 outVector) {
+		float moveUpLength = sphere.nearestCollisionDistance - collisionVeryCloseDistance;
+
+		// HACK: if the above length ends up being 0, outVector will end up with
+		//       NaN x/y/z components which will eventually cause any position
+		//       update calculations using outVector being NaN and the entity
+		//       will seem to disappear entirely. If we catch this zero length
+		//       condition and recalculate it so that the length is non-zero but
+		//       still very small (below the collisionVeryCloseDistance threshold)
+		//       then it appears to work fine.
+		if (moveUpLength == 0.0f)
+			moveUpLength = sphere.nearestCollisionDistance - (collisionVeryCloseDistance * 0.5f);
+
+		MathHelpers.setLengthOf(outVector.set(velocity), moveUpLength);
 	}
 
 	private void calculatePossibleCollisionArea(SweptSphere sphere, Vector3 velocity) {
