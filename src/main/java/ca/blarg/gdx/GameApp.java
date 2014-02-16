@@ -58,6 +58,7 @@ public abstract class GameApp implements Disposable {
 	public void onResize(int width, int height) {
 		Gdx.app.debug("GameApp", String.format("onResize(%d, %d)", width, height));
 		viewportContext.onResize(width, height);
+		stateManager.onResize();
 	}
 
 	public void onRender(float interpolation) {
