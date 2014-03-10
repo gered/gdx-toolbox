@@ -148,8 +148,7 @@ public class ExtendedSpriteBatch extends SpriteBatch {
 					fontTexture,
 					currentX + glyphXoffset, currentY + glyphYoffset,
 					glyphWidth, glyphHeight,
-					glyph.srcX, glyph.srcY, glyph.width, glyph.height,
-			        false, false
+					glyph.u, glyph.v, glyph.u2, glyph.v2
 			);
 
 			currentX += ((float)glyph.xadvance * scale);
