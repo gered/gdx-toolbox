@@ -8,13 +8,22 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
 public abstract class TextureAtlas {
+	public class Animation {
+		public String name;
+		public int destTileIndex;
+		public int start;
+		public int stop;
+		public float delay;
+		public boolean loop;
+	}
+
 	public static final float TEXCOORD_EDGE_BLEED_OFFSET = 0.02f;
 
 	public final Texture texture;
 
 	protected final float edgeCoordOffset;
 	protected Array<TextureRegion> tiles = new Array<TextureRegion>(TextureRegion.class);
-	protected ObjectMap<String, AnimationSequence> animations = new ObjectMap<String, AnimationSequence>();
+	protected ObjectMap<String, Animation> animations = new ObjectMap<String, Animation>();
 
 	public TextureAtlas(Texture texture, float edgeCoordOffset) {
 		this.texture = texture;
@@ -33,8 +42,22 @@ public abstract class TextureAtlas {
 		return animations.size > 0;
 	}
 
-	public ObjectMap.Entries<String, AnimationSequence> getAnimations() {
+	public ObjectMap.Entries<String, Animation> getAnimations() {
 		return animations.entries();
+	}
+
+	public void addAnimation(String name, int destTileIndex, int start, int stop, float delay, boolean loop) {
+		if (animations.containsKey(name))
+			throw new UnsupportedOperationException("Duplicate animation sequence name.");
+
+		Animation animation = new Animation();
+		animation.name = name;
+		animation.destTileIndex = destTileIndex;
+		animation.start = start;
+		animation.stop = stop;
+		animation.delay = delay;
+		animation.loop = loop;
+		animations.put(name, animation);
 	}
 
 	public static void scaleTexCoord(Vector2 texCoord, TextureRegion tile, Vector2 out) {
