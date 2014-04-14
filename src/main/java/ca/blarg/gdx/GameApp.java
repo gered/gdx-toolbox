@@ -2,14 +2,19 @@ package ca.blarg.gdx;
 
 import ca.blarg.gdx.events.EventManager;
 import ca.blarg.gdx.graphics.*;
+import ca.blarg.gdx.graphics.atlas.TextureAtlas;
+import ca.blarg.gdx.graphics.atlas.json.TextureAtlasLoader;
 import ca.blarg.gdx.states.StateManager;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public abstract class GameApp implements Disposable {
+	public final AssetManager assetManager;
 	public final EventManager eventManager;
 	public final StateManager stateManager;
 	public final ViewportContext viewportContext;
@@ -26,6 +31,7 @@ public abstract class GameApp implements Disposable {
 	public GameApp() {
 		Gdx.app.debug("GameApp", "ctor");
 
+		assetManager = new AssetManager();
 		eventManager = new EventManager();
 		stateManager = new StateManager(this, eventManager);
 		viewportContext = new ViewportContext(true);
@@ -36,6 +42,9 @@ public abstract class GameApp implements Disposable {
 		debugGeometryRenderer = new DebugGeometryRenderer();
 		shapeRenderer = new ShapeRenderer();
 
+		assetManager.setLoader(TextureAtlas.class, new TextureAtlasLoader(new InternalFileHandleResolver()));
+
+		Services.register(assetManager);
 		Services.register(eventManager);
 		Services.register(stateManager);
 		Services.register(viewportContext);
