@@ -3,10 +3,9 @@ package ca.blarg.gdx.graphics.atlas;
 import ca.blarg.gdx.math.MathHelpers;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import ca.blarg.gdx.math.MathHelpers;
+import com.badlogic.gdx.utils.ObjectMap;
 
 public abstract class TextureAtlas {
 	public static final float TEXCOORD_EDGE_BLEED_OFFSET = 0.02f;
@@ -15,6 +14,7 @@ public abstract class TextureAtlas {
 
 	protected final float edgeCoordOffset;
 	protected Array<TextureRegion> tiles = new Array<TextureRegion>(TextureRegion.class);
+	protected ObjectMap<String, AnimationSequence> animations = new ObjectMap<String, AnimationSequence>();
 
 	public TextureAtlas(Texture texture, float edgeCoordOffset) {
 		this.texture = texture;
@@ -27,6 +27,14 @@ public abstract class TextureAtlas {
 
 	public int count() {
 		return tiles.size;
+	}
+
+	public boolean hasAnimations() {
+		return animations.size > 0;
+	}
+
+	public ObjectMap.Entries<String, AnimationSequence> getAnimations() {
+		return animations.entries();
 	}
 
 	public static void scaleTexCoord(Vector2 texCoord, TextureRegion tile, Vector2 out) {
