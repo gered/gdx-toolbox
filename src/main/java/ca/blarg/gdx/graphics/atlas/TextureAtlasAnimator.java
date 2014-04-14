@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
-import ca.blarg.gdx.graphics.GraphicsHelpers;
 
 /**
  * Animation manager class for animation sequences made up of tiles in a {@link TextureAtlas}. This class should only
@@ -23,6 +22,16 @@ public class TextureAtlasAnimator implements Disposable {
 
 	public TextureAtlasAnimator() {
 		animations = new ObjectMap<String, AnimationSequence>();
+	}
+
+	public void add(TextureAtlas atlas) {
+		if (atlas == null)
+			throw new IllegalArgumentException("atlas cannot be null.");
+
+		for (ObjectMap.Entry<String, TextureAtlas.Animation> i : atlas.getAnimations()) {
+			TextureAtlas.Animation animation = i.value;
+			addSequence(i.key, atlas, animation.destTileIndex, animation.start, animation.stop, animation.delay, animation.loop);
+		}
 	}
 
 	public void addSequence(String name, TextureAtlas atlas, int tileToBeAnimated, int start, int stop, float delay, boolean loop) {
