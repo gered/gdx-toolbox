@@ -1,70 +1,48 @@
 package ca.blarg.gdx.graphics.atlas.json;
 
-import ca.blarg.gdx.graphics.atlas.CustomGridTextureAtlas;
-import ca.blarg.gdx.graphics.atlas.TextureAtlasAnimator;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.utils.Json;
-import ca.blarg.gdx.graphics.atlas.CustomGridTextureAtlas;
 import ca.blarg.gdx.graphics.atlas.TextureAtlas;
 import ca.blarg.gdx.graphics.atlas.TextureAtlasAnimator;
-import ca.blarg.gdx.graphics.atlas.json.JsonTextureAtlasAnimation;
-import ca.blarg.gdx.graphics.atlas.json.JsonTextureAtlasDefinition;
-import ca.blarg.gdx.graphics.atlas.json.JsonTextureAtlasTile;
-import ca.blarg.gdx.io.FileHelpers;
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.assets.AssetLoaderParameters;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.Array;
 
-public final class TextureAtlasLoader {
-	public static TextureAtlas load(String configFile) {
-		return load(configFile, null);
+@SuppressWarnings("unchecked")
+public class TextureAtlasLoader extends AsynchronousAssetLoader<TextureAtlas, TextureAtlasLoader.TextureAtlasParameter> {
+	public TextureAtlasLoader(FileHandleResolver resolver) {
+		super(resolver);
+		desc = new TextureAtlasDesc();
 	}
 
-	public static TextureAtlas load(String configFile, TextureAtlasAnimator animator) {
-		return load(Gdx.files.internal(configFile), animator);
+	final TextureAtlasDesc desc;
+	JsonTextureAtlasDefinition definition;
+	TextureAtlas atlas;
+
+	@Override
+	public Array<AssetDescriptor> getDependencies(String fileName, FileHandle file, TextureAtlasParameter parameter) {
+		definition = desc.load(file);
+		Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
+		deps.add(new AssetDescriptor(definition.texture, Texture.class));
+		return deps;
 	}
 
-	public static TextureAtlas load(FileHandle configFile) {
-		return load(configFile, null);
+	@Override
+	public void loadAsync(AssetManager manager, String fileName, FileHandle file, TextureAtlasParameter parameter) {
+		atlas = desc.create(definition, manager);
 	}
 
-	public static TextureAtlas load(FileHandle configFile, TextureAtlasAnimator animator) {
-		String path = FileHelpers.getPath(configFile);
-
-		Json json = new Json();
-		JsonTextureAtlasDefinition config = json.fromJson(JsonTextureAtlasDefinition.class, configFile);
-
-		if (config.texture == null)
-			throw new RuntimeException("No texture specified.");
-		if (config.tiles == null || config.tiles.size() == 0)
-			throw new RuntimeException("No tiles defined.");
-
-		// TODO: loading via AssetManager
-		Texture texture = new Texture(FileHelpers.open(configFile.type(), path + config.texture));
-		CustomGridTextureAtlas atlas = new CustomGridTextureAtlas(texture);
-
-		for (int i = 0; i < config.tiles.size(); ++i) {
-			JsonTextureAtlasTile tile = config.tiles.get(i);
-			// TODO: parameter value error checking
-			if (tile.autogrid)
-				atlas.addGrid(tile.x, tile.y, tile.tileWidth, tile.tileHeight, tile.numTilesX, tile.numTilesY, tile.border);
-			else
-				atlas.add(tile.x, tile.y, tile.width, tile.height);
-		}
-
-		if (config.animations != null && config.animations.size() > 0 && animator != null) {
-			for (int i = 0; i < config.animations.size(); ++i) {
-				JsonTextureAtlasAnimation animation = config.animations.get(i);
-				// TODO: parameter value error checking
-				animator.addSequence(animation.name,
-				                     atlas,
-				                     animation.tileIndex,
-				                     animation.startIndex,
-				                     animation.endIndex,
-				                     animation.delay,
-				                     animation.loop);
-			}
-		}
-
+	@Override
+	public TextureAtlas loadSync(AssetManager manager, String fileName, FileHandle file, TextureAtlasParameter parameter) {
+		if (parameter != null && parameter.animator != null)
+			parameter.animator.add(atlas);
 		return atlas;
+	}
+
+	public static class TextureAtlasParameter extends AssetLoaderParameters<TextureAtlas> {
+		public TextureAtlasAnimator animator;
 	}
 }
