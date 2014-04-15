@@ -9,8 +9,16 @@ public class CustomGridTextureAtlas extends TextureAtlas {
 		this(texture, TEXCOORD_EDGE_BLEED_OFFSET);
 	}
 
+	public CustomGridTextureAtlas(Texture texture, MaterialTileMapping materialTileMapping) {
+		this(texture, materialTileMapping, TEXCOORD_EDGE_BLEED_OFFSET);
+	}
+
 	public CustomGridTextureAtlas(Texture texture, float edgeCoordOffset) {
 		super(texture, edgeCoordOffset);
+	}
+
+	public CustomGridTextureAtlas(Texture texture, MaterialTileMapping materialTileMapping, float edgeCoordOffset) {
+		super(texture, materialTileMapping, edgeCoordOffset);
 	}
 
 	public int add(Rectangle rect) {

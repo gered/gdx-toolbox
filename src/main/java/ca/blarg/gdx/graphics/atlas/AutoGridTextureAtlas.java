@@ -12,8 +12,16 @@ public class AutoGridTextureAtlas extends TextureAtlas {
 		this(texture, tileWidth, tileHeight, tileBorder, TEXCOORD_EDGE_BLEED_OFFSET);
 	}
 
+	public AutoGridTextureAtlas(Texture texture, int tileWidth, int tileHeight, int tileBorder, MaterialTileMapping materialTileMapping) {
+		this(texture, tileWidth, tileHeight, tileBorder, materialTileMapping , TEXCOORD_EDGE_BLEED_OFFSET);
+	}
+
 	public AutoGridTextureAtlas(Texture texture, int tileWidth, int tileHeight, int tileBorder, float edgeCoordOffset) {
-		super(texture, edgeCoordOffset);
+		this(texture, tileWidth, tileHeight, tileBorder, null, edgeCoordOffset);
+	}
+
+	public AutoGridTextureAtlas(Texture texture, int tileWidth, int tileHeight, int tileBorder, MaterialTileMapping materialTileMapping, float edgeCoordOffset) {
+		super(texture, materialTileMapping, edgeCoordOffset);
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 		this.tileBorder = tileBorder;

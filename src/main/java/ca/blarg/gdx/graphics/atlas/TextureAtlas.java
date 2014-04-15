@@ -20,6 +20,7 @@ public abstract class TextureAtlas {
 	public static final float TEXCOORD_EDGE_BLEED_OFFSET = 0.02f;
 
 	public final Texture texture;
+	public final MaterialTileMapping materialTileMapping;
 
 	protected final float edgeCoordOffset;
 	protected Array<TextureRegion> tiles = new Array<TextureRegion>(TextureRegion.class);
@@ -27,6 +28,13 @@ public abstract class TextureAtlas {
 
 	public TextureAtlas(Texture texture, float edgeCoordOffset) {
 		this.texture = texture;
+		this.materialTileMapping = null;
+		this.edgeCoordOffset = edgeCoordOffset;
+	}
+
+	public TextureAtlas(Texture texture, MaterialTileMapping materialTileMapping, float edgeCoordOffset) {
+		this.texture = texture;
+		this.materialTileMapping = materialTileMapping;
 		this.edgeCoordOffset = edgeCoordOffset;
 	}
 
