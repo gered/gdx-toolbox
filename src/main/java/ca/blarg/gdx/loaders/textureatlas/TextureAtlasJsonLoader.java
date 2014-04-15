@@ -2,7 +2,6 @@ package ca.blarg.gdx.loaders.textureatlas;
 
 import ca.blarg.gdx.graphics.atlas.CustomGridTextureAtlas;
 import ca.blarg.gdx.graphics.atlas.TextureAtlas;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,21 +13,13 @@ public class TextureAtlasJsonLoader {
 		return json.fromJson(JsonTextureAtlasDefinition.class, file);
 	}
 
-	public static TextureAtlas create(JsonTextureAtlasDefinition definition) {
-		return create(definition, null);
-	}
-
 	public static TextureAtlas create(JsonTextureAtlasDefinition definition, AssetManager assetManager) {
 		if (definition.texture == null)
 			throw new RuntimeException("No texture specified.");
 		if (definition.tiles == null || definition.tiles.size() == 0)
 			throw new RuntimeException("No tiles defined.");
 
-		Texture texture;
-		if (assetManager != null)
-			texture = assetManager.get(definition.texture, Texture.class);
-		else
-			texture = new Texture(Gdx.files.internal(definition.texture));
+		Texture texture = assetManager.get(definition.texture, Texture.class);
 
 		CustomGridTextureAtlas atlas = new CustomGridTextureAtlas(texture);
 		for (int i = 0; i < definition.tiles.size(); ++i) {
@@ -48,11 +39,6 @@ public class TextureAtlasJsonLoader {
 		}
 
 		return atlas;
-	}
-
-	public static TextureAtlas loadAndCreate(FileHandle file) {
-		JsonTextureAtlasDefinition definition = load(file);
-		return create(definition);
 	}
 
 	public static TextureAtlas loadAndCreate(FileHandle file, AssetManager assetManager) {
