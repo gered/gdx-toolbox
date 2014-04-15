@@ -172,12 +172,16 @@ public class TextureAtlasAnimator implements Disposable {
 		GraphicsHelpers.drawToTexture(sequence.atlas.texture, sequence.originalAnimatingTile, tile.getRegionX(), tile.getRegionY());
 	}
 
-	@Override
-	public void dispose() {
+	public void reset() {
 		for (ObjectMap.Entry<String, AnimationSequence> i : animations.entries()) {
 			restoreTextureWithOriginalTile(i.value);
 			i.value.dispose();
 		}
 		animations.clear();
+	}
+
+	@Override
+	public void dispose() {
+		reset();
 	}
 }
