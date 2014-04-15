@@ -1,7 +1,6 @@
 package ca.blarg.gdx.assets.textureatlas;
 
 import ca.blarg.gdx.graphics.atlas.TextureAtlas;
-import ca.blarg.gdx.graphics.atlas.TextureAtlasAnimator;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
@@ -35,12 +34,9 @@ public class TextureAtlasLoader extends AsynchronousAssetLoader<TextureAtlas, Te
 
 	@Override
 	public TextureAtlas loadSync(AssetManager manager, String fileName, FileHandle file, TextureAtlasParameter parameter) {
-		if (parameter != null && parameter.animator != null)
-			parameter.animator.add(atlas);
 		return atlas;
 	}
 
 	public static class TextureAtlasParameter extends AssetLoaderParameters<TextureAtlas> {
-		public TextureAtlasAnimator animator;
 	}
 }
