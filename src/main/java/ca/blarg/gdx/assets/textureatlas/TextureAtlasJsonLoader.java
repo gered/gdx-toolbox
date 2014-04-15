@@ -2,7 +2,6 @@ package ca.blarg.gdx.assets.textureatlas;
 
 import ca.blarg.gdx.assets.AssetLoadingException;
 import ca.blarg.gdx.graphics.atlas.CustomGridTextureAtlas;
-import ca.blarg.gdx.graphics.atlas.MaterialTileMapping;
 import ca.blarg.gdx.graphics.atlas.TextureAtlas;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
@@ -22,11 +21,8 @@ class TextureAtlasJsonLoader {
 			throw new AssetLoadingException(file.path(), "No tiles defined.");
 
 		Texture texture = assetManager.get(definition.texture, Texture.class);
-		MaterialTileMapping materialTileMapping = null;
-		if (definition.materialMapping != null)
-			materialTileMapping = assetManager.get(definition.materialMapping, MaterialTileMapping.class);
 
-		CustomGridTextureAtlas atlas = new CustomGridTextureAtlas(texture, materialTileMapping);
+		CustomGridTextureAtlas atlas = new CustomGridTextureAtlas(texture);
 		for (int i = 0; i < definition.tiles.size(); ++i) {
 			JsonTextureAtlasTile tile = definition.tiles.get(i);
 			// TODO: parameter value error checking
@@ -40,6 +36,13 @@ class TextureAtlasJsonLoader {
 			for (int i = 0; i < definition.animations.size(); ++i) {
 				JsonTextureAtlasAnimation animation = definition.animations.get(i);
 				atlas.addAnimation(animation.name, animation.tileIndex, animation.startIndex, animation.endIndex, animation.delay, animation.loop);
+			}
+		}
+
+		if (definition.materialMapping != null && definition.materialMapping.size() > 0) {
+			for (int i = 0; i < definition.materialMapping.size(); ++i) {
+				JsonMaterialMapping mapping = definition.materialMapping.get(i);
+				atlas.materialTileMapping.add(mapping.name, atlas.get(mapping.tile), mapping.minU, mapping.maxU, mapping.minV, mapping.maxV);
 			}
 		}
 
