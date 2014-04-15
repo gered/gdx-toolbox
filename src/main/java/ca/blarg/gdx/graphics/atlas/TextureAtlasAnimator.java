@@ -1,6 +1,7 @@
 package ca.blarg.gdx.graphics.atlas;
 
 import ca.blarg.gdx.graphics.GraphicsHelpers;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -31,6 +32,15 @@ public class TextureAtlasAnimator implements Disposable {
 		for (ObjectMap.Entry<String, TextureAtlas.Animation> i : atlas.getAnimations()) {
 			TextureAtlas.Animation animation = i.value;
 			addSequence(i.key, atlas, animation.destTileIndex, animation.start, animation.stop, animation.delay, animation.loop);
+		}
+	}
+
+	public void addAllAtlases(AssetManager assetManager) {
+		for (String filename : assetManager.getAssetNames()) {
+			if (TextureAtlas.class.isAssignableFrom(assetManager.getAssetType(filename))) {
+				TextureAtlas atlas = assetManager.get(filename, TextureAtlas.class);
+				add(atlas);
+			}
 		}
 	}
 
