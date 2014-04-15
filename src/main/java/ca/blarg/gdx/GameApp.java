@@ -3,7 +3,7 @@ package ca.blarg.gdx;
 import ca.blarg.gdx.events.EventManager;
 import ca.blarg.gdx.graphics.*;
 import ca.blarg.gdx.graphics.atlas.TextureAtlas;
-import ca.blarg.gdx.graphics.atlas.json.TextureAtlasLoader;
+import ca.blarg.gdx.json.textureatlas.TextureAtlasLoader;
 import ca.blarg.gdx.states.StateManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
