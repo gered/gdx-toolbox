@@ -1,4 +1,4 @@
-package ca.blarg.gdx.json.textureatlas;
+package ca.blarg.gdx.loaders.textureatlas;
 
 import ca.blarg.gdx.graphics.atlas.CustomGridTextureAtlas;
 import ca.blarg.gdx.graphics.atlas.TextureAtlas;
