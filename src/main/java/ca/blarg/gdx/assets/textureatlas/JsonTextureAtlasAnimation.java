@@ -1,4 +1,4 @@
-package ca.blarg.gdx.loaders.textureatlas;
+package ca.blarg.gdx.assets.textureatlas;
 
 public class JsonTextureAtlasAnimation {
 	public String name;

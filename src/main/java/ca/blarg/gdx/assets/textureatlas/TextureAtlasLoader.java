@@ -1,4 +1,4 @@
-package ca.blarg.gdx.loaders.textureatlas;
+package ca.blarg.gdx.assets.textureatlas;
 
 import ca.blarg.gdx.graphics.atlas.TextureAtlas;
 import ca.blarg.gdx.graphics.atlas.TextureAtlasAnimator;
