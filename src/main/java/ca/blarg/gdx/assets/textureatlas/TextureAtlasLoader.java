@@ -1,6 +1,5 @@
 package ca.blarg.gdx.assets.textureatlas;
 
-import ca.blarg.gdx.graphics.atlas.MaterialTileMapping;
 import ca.blarg.gdx.graphics.atlas.TextureAtlas;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
@@ -24,11 +23,7 @@ public class TextureAtlasLoader extends AsynchronousAssetLoader<TextureAtlas, Te
 	public Array<AssetDescriptor> getDependencies(String fileName, FileHandle file, TextureAtlasParameter parameter) {
 		definition = TextureAtlasJsonLoader.load(file);
 		Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
-
 		deps.add(new AssetDescriptor(definition.texture, Texture.class));
-		if (definition.materialMapping != null)
-			deps.add(new AssetDescriptor(definition.materialMapping, MaterialTileMapping.class));
-
 		return deps;
 	}
 
