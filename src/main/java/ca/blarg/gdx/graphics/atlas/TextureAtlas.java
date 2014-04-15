@@ -28,13 +28,7 @@ public abstract class TextureAtlas {
 
 	public TextureAtlas(Texture texture, float edgeCoordOffset) {
 		this.texture = texture;
-		this.materialTileMapping = null;
-		this.edgeCoordOffset = edgeCoordOffset;
-	}
-
-	public TextureAtlas(Texture texture, MaterialTileMapping materialTileMapping, float edgeCoordOffset) {
-		this.texture = texture;
-		this.materialTileMapping = materialTileMapping;
+		this.materialTileMapping = new MaterialTileMapping(this);
 		this.edgeCoordOffset = edgeCoordOffset;
 	}
 

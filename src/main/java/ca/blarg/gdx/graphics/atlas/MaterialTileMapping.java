@@ -14,9 +14,14 @@ public class MaterialTileMapping {
 	}
 
 	final ObjectMap<String, TileTexture> mappings;
+	public final TextureAtlas atlas;
 
-	public MaterialTileMapping() {
+	public MaterialTileMapping(TextureAtlas atlas) {
+		if (atlas == null)
+			throw new IllegalArgumentException("atlas cannot be null.");
+
 		this.mappings = new ObjectMap<String, TileTexture>();
+		this.atlas = atlas;
 	}
 
 	public MaterialTileMapping add(String materialName, TextureRegion region) {
