@@ -15,16 +15,14 @@ import com.badlogic.gdx.utils.Array;
 public class TextureAtlasLoader extends AsynchronousAssetLoader<TextureAtlas, TextureAtlasLoader.TextureAtlasParameter> {
 	public TextureAtlasLoader(FileHandleResolver resolver) {
 		super(resolver);
-		desc = new TextureAtlasDesc();
 	}
 
-	final TextureAtlasDesc desc;
 	JsonTextureAtlasDefinition definition;
 	TextureAtlas atlas;
 
 	@Override
 	public Array<AssetDescriptor> getDependencies(String fileName, FileHandle file, TextureAtlasParameter parameter) {
-		definition = desc.load(file);
+		definition = TextureAtlasJsonLoader.load(file);
 		Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
 		deps.add(new AssetDescriptor(definition.texture, Texture.class));
 		return deps;
@@ -32,7 +30,7 @@ public class TextureAtlasLoader extends AsynchronousAssetLoader<TextureAtlas, Te
 
 	@Override
 	public void loadAsync(AssetManager manager, String fileName, FileHandle file, TextureAtlasParameter parameter) {
-		atlas = desc.create(definition, manager);
+		atlas = TextureAtlasJsonLoader.create(definition, manager);
 	}
 
 	@Override

@@ -8,17 +8,17 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Json;
 
-public class TextureAtlasDesc {
-	public JsonTextureAtlasDefinition load(FileHandle file) {
+public class TextureAtlasJsonLoader {
+	public static JsonTextureAtlasDefinition load(FileHandle file) {
 		Json json = new Json();
 		return json.fromJson(JsonTextureAtlasDefinition.class, file);
 	}
 
-	public TextureAtlas create(JsonTextureAtlasDefinition definition) {
+	public static TextureAtlas create(JsonTextureAtlasDefinition definition) {
 		return create(definition, null);
 	}
 
-	public TextureAtlas create(JsonTextureAtlasDefinition definition, AssetManager assetManager) {
+	public static TextureAtlas create(JsonTextureAtlasDefinition definition, AssetManager assetManager) {
 		if (definition.texture == null)
 			throw new RuntimeException("No texture specified.");
 		if (definition.tiles == null || definition.tiles.size() == 0)
