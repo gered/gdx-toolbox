@@ -7,7 +7,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Json;
 
-public class TextureAtlasJsonLoader {
+class TextureAtlasJsonLoader {
 	public static JsonTextureAtlasDefinition load(FileHandle file) {
 		Json json = new Json();
 		return json.fromJson(JsonTextureAtlasDefinition.class, file);
@@ -39,10 +39,5 @@ public class TextureAtlasJsonLoader {
 		}
 
 		return atlas;
-	}
-
-	public static TextureAtlas loadAndCreate(FileHandle file, AssetManager assetManager) {
-		JsonTextureAtlasDefinition definition = load(file);
-		return create(definition, assetManager);
 	}
 }
