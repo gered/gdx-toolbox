@@ -30,7 +30,7 @@ public class TextureAtlasLoader extends AsynchronousAssetLoader<TextureAtlas, Te
 
 	@Override
 	public void loadAsync(AssetManager manager, String fileName, FileHandle file, TextureAtlasParameter parameter) {
-		atlas = TextureAtlasJsonLoader.create(definition, manager);
+		atlas = TextureAtlasJsonLoader.create(file, definition, manager);
 	}
 
 	@Override

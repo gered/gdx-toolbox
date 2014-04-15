@@ -1,5 +1,6 @@
 package ca.blarg.gdx.assets.textureatlas;
 
+import ca.blarg.gdx.assets.AssetLoadingException;
 import ca.blarg.gdx.graphics.atlas.CustomGridTextureAtlas;
 import ca.blarg.gdx.graphics.atlas.TextureAtlas;
 import com.badlogic.gdx.assets.AssetManager;
@@ -13,11 +14,11 @@ class TextureAtlasJsonLoader {
 		return json.fromJson(JsonTextureAtlasDefinition.class, file);
 	}
 
-	public static TextureAtlas create(JsonTextureAtlasDefinition definition, AssetManager assetManager) {
+	public static TextureAtlas create(FileHandle file, JsonTextureAtlasDefinition definition, AssetManager assetManager) {
 		if (definition.texture == null)
-			throw new RuntimeException("No texture specified.");
+			throw new AssetLoadingException(file.path(), "No texture specified.");
 		if (definition.tiles == null || definition.tiles.size() == 0)
-			throw new RuntimeException("No tiles defined.");
+			throw new AssetLoadingException(file.path(), "No tiles defined.");
 
 		Texture texture = assetManager.get(definition.texture, Texture.class);
 
