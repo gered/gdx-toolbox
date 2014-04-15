@@ -52,6 +52,10 @@ public class MaterialTileMapping {
 		return mappings.get(materialName);
 	}
 
+	public boolean hasMappings() {
+		return mappings.size > 0;
+	}
+
 	public void scaleUV(String materialName, Vector2 srcTexCoord, Vector2 out) {
 		TileTexture tileTexture = mappings.get(materialName);
 		if (tileTexture == null)
