@@ -49,4 +49,14 @@ public class TextureAtlasJsonLoader {
 
 		return atlas;
 	}
+
+	public static TextureAtlas loadAndCreate(FileHandle file) {
+		JsonTextureAtlasDefinition definition = load(file);
+		return create(definition);
+	}
+
+	public static TextureAtlas loadAndCreate(FileHandle file, AssetManager assetManager) {
+		JsonTextureAtlasDefinition definition = load(file);
+		return create(definition, assetManager);
+	}
 }
