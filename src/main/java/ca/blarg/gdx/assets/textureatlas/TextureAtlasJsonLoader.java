@@ -9,12 +9,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Json;
 
 class TextureAtlasJsonLoader {
-	public static JsonTextureAtlasDefinition load(FileHandle file) {
+	public static JsonTextureAtlas load(FileHandle file) {
 		Json json = new Json();
-		return json.fromJson(JsonTextureAtlasDefinition.class, file);
+		return json.fromJson(JsonTextureAtlas.class, file);
 	}
 
-	public static TextureAtlas create(FileHandle file, JsonTextureAtlasDefinition definition, AssetManager assetManager) {
+	public static TextureAtlas create(FileHandle file, JsonTextureAtlas definition, AssetManager assetManager) {
 		if (definition.texture == null)
 			throw new AssetLoadingException(file.path(), "No texture specified.");
 		if (definition.tiles == null || definition.tiles.size() == 0)

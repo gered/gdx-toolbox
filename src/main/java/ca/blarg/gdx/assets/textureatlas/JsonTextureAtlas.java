@@ -2,7 +2,7 @@ package ca.blarg.gdx.assets.textureatlas;
 
 import java.util.ArrayList;
 
-public class JsonTextureAtlasDefinition {
+public class JsonTextureAtlas {
 	public String texture;
 	public ArrayList<JsonMaterialMapping> materialMapping;
 	public ArrayList<JsonTextureAtlasTile> tiles;

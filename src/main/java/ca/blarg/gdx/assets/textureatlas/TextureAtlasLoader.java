@@ -16,7 +16,7 @@ public class TextureAtlasLoader extends AsynchronousAssetLoader<TextureAtlas, Te
 		super(resolver);
 	}
 
-	JsonTextureAtlasDefinition definition;
+	JsonTextureAtlas definition;
 	TextureAtlas atlas;
 
 	@Override
