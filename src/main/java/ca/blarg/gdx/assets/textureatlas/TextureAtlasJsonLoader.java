@@ -3,6 +3,7 @@ package ca.blarg.gdx.assets.textureatlas;
 import ca.blarg.gdx.assets.AssetLoadingException;
 import ca.blarg.gdx.graphics.atlas.CustomGridTextureAtlas;
 import ca.blarg.gdx.graphics.atlas.TextureAtlas;
+import ca.blarg.gdx.io.FileHelpers;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,7 +12,12 @@ import com.badlogic.gdx.utils.Json;
 class TextureAtlasJsonLoader {
 	public static JsonTextureAtlas load(FileHandle file) {
 		Json json = new Json();
-		return json.fromJson(JsonTextureAtlas.class, file);
+		JsonTextureAtlas definition = json.fromJson(JsonTextureAtlas.class, file);
+
+		if (!FileHelpers.hasPath(definition.texture))
+			definition.texture = FileHelpers.combine(file.parent().path(), definition.texture);
+
+		return definition;
 	}
 
 	public static TextureAtlas create(FileHandle file, JsonTextureAtlas definition, AssetManager assetManager) {
