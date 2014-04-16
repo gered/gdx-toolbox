@@ -1,9 +1,9 @@
 package ca.blarg.gdx.assets.textureatlas;
 
 import ca.blarg.gdx.assets.AssetLoadingException;
+import ca.blarg.gdx.assets.AssetLoadingUtils;
 import ca.blarg.gdx.graphics.atlas.CustomGridTextureAtlas;
 import ca.blarg.gdx.graphics.atlas.TextureAtlas;
-import ca.blarg.gdx.io.FileHelpers;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,8 +14,7 @@ class TextureAtlasJsonLoader {
 		Json json = new Json();
 		JsonTextureAtlas definition = json.fromJson(JsonTextureAtlas.class, file);
 
-		if (!FileHelpers.hasPath(definition.texture))
-			definition.texture = FileHelpers.combine(file.parent().path(), definition.texture);
+		definition.texture = AssetLoadingUtils.addPathIfNone(definition.texture, file.parent().path());
 
 		return definition;
 	}
