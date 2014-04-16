@@ -1,5 +1,6 @@
 package ca.blarg.gdx.io;
 
+import ca.blarg.gdx.Strings;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -19,6 +20,26 @@ public final class FileHelpers {
 
 	public static boolean hasPath(String filename) {
 		return filename.contains("/");
+	}
+
+	public static String combine(String path, String filename) {
+		if (filename == null)
+			throw new IllegalArgumentException("filename cannot be null.");
+
+		if (Strings.isNullOrEmpty(path))
+			return filename;
+
+		if (path.endsWith("/")) {
+			if (filename.startsWith("/"))
+				return path + filename.substring(1);
+			else
+				return path + filename;
+		} else {
+			if (filename.startsWith("/"))
+				return path + filename;
+			else
+				return path + "/" + filename;
+		}
 	}
 
 	public static FileHandle open(Files.FileType type, String path) {
