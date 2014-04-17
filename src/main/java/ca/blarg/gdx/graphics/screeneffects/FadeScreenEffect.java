@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class FadeScreenEffect extends ScreenEffect
 {
-	public static final float DEFAULT_FADE_SPEED = 3.0f;
+	public static final float DEFAULT_FADE_SPEED = 0.01f;
 
 	float fadeSpeed;
 	boolean isFadingOut;
