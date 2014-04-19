@@ -47,6 +47,36 @@ public class StateManager implements Disposable {
 		return (top == null ? null : top.state);
 	}
 
+	public GameState getStateBefore(GameState state) {
+		if (state == null)
+			throw new IllegalArgumentException("state cannot be null.");
+
+		StateInfo info = getStateInfoFor(state);
+		if (info == null)
+			return null;
+
+		int index = states.indexOf(info);
+		if (index == 0)
+			return null;
+		else
+			return states.get(index - 1).state;
+	}
+
+	public GameState getStateAfter(GameState state) {
+		if (state == null)
+			throw new IllegalArgumentException("state cannot be null.");
+
+		StateInfo info = getStateInfoFor(state);
+		if (info == null)
+			return null;
+
+		int index = states.indexOf(info);
+		if (index == states.size() - 1)
+			return null;
+		else
+			return states.get(index + 1).state;
+	}
+
 	public boolean isTransitioning() {
 		for (int i = 0; i < states.size(); ++i) {
 			if (states.get(i).isTransitioning)
