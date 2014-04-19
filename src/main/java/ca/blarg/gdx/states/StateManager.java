@@ -255,6 +255,19 @@ public class StateManager implements Disposable {
 		startTopStatesTransitioningOut(false);
 	}
 
+	public void pop(GameState state) {
+		if (isTransitioning())
+			throw new UnsupportedOperationException();
+
+		StateInfo stateInfo = getStateInfoFor(state);
+		if (stateInfo == null)
+			throw new IllegalArgumentException("Trying to pop GameState that is not part of this StateManager.");
+		if (stateInfo.isInactive)
+			throw new IllegalArgumentException("This method can only be used to pop active GameStates.");
+
+		startThisStateAndAboveTransitioningOut(stateInfo, false);
+	}
+
 	private void queueForPush(StateInfo newStateInfo) {
 		if (newStateInfo == null)
 			throw new IllegalArgumentException("newStateInfo cannot be null.");
@@ -377,6 +390,19 @@ public class StateManager implements Disposable {
 		// removed on the next onUpdate()
 		if (!info.isInactive)
 			transitionOut(info, !pausing);
+	}
+
+	private void startThisStateAndAboveTransitioningOut(StateInfo info, boolean pausing) {
+		int i = states.indexOf(info);
+		if (i == -1)
+			return;
+
+		for (; i < states.size(); ++i) {
+			// only look at active states, since inactive ones have already been
+			// transitioned out and will be removed on the next onUpdate()
+			if (!states.get(i).isInactive)
+				transitionOut(states.get(i), !pausing);
+		}
 	}
 
 	private void cleanupInactiveStates() {
