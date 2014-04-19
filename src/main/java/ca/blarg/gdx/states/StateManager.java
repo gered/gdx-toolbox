@@ -77,6 +77,44 @@ public class StateManager implements Disposable {
 			return states.get(index + 1).state;
 	}
 
+	public GameState getStateBeforeOfType(GameState state, Class<? extends GameState> type) {
+		if (state == null)
+			throw new IllegalArgumentException("state cannot be null.");
+		if (type == null)
+			throw new IllegalArgumentException("type cannot be null.");
+
+		StateInfo info = getStateInfoFor(state);
+		if (info == null)
+			return null;
+
+		for (int i = states.indexOf(info); i >= 0; --i) {
+			GameState current = states.get(i).state;
+			if (type.isInstance(current))
+				return current;
+		}
+
+		return null;
+	}
+
+	public GameState getStateAfterOfType(GameState state, Class<? extends GameState> type) {
+		if (state == null)
+			throw new IllegalArgumentException("state cannot be null.");
+		if (type == null)
+			throw new IllegalArgumentException("type cannot be null.");
+
+		StateInfo info = getStateInfoFor(state);
+		if (info == null)
+			return null;
+
+		for (int i = states.indexOf(info); i < states.size(); ++i) {
+			GameState current = states.get(i).state;
+			if (type.isInstance(current))
+				return current;
+		}
+
+		return null;
+	}
+
 	public boolean isTransitioning() {
 		for (int i = 0; i < states.size(); ++i) {
 			if (states.get(i).isTransitioning)
