@@ -481,12 +481,12 @@ public class StateManager implements Disposable {
 				}
 			}
 
+			states.addLast(stateInfo);
+
 			Gdx.app.debug("StateManager", String.format("Pushing %sstate %s from push-queue.", (stateInfo.isOverlay ? "overlay " : ""), stateInfo));
 			stateInfo.state.onPush();
 
 			transitionIn(stateInfo, false);
-
-			states.addLast(stateInfo);
 		}
 
 		while (swapQueue.size() > 0) {
@@ -504,12 +504,12 @@ public class StateManager implements Disposable {
 				currentTopStateInfo.isOverlayed = true;
 			}
 
+			states.addLast(stateInfo);
+
 			Gdx.app.debug("StateManager", String.format("Pushing %sstate %s from swap-queue.", (stateInfo.isOverlay ? "overlay " : ""), stateInfo));
 			stateInfo.state.onPush();
 
 			transitionIn(stateInfo, false);
-
-			states.addLast(stateInfo);
 		}
 
 		pushQueueHasOverlay = false;
