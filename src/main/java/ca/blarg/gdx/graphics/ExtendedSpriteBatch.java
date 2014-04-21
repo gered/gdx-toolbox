@@ -179,7 +179,7 @@ public class ExtendedSpriteBatch extends SpriteBatch {
 
 	/**************************************************************************/
 
-	private void getProjectedCenteredPosition(float x, float y, float z, float width, float height, Vector3 result) {
+	public void getProjectedCenteredPosition(float x, float y, float z, float width, float height, Vector3 result) {
 		if (projectionCamera == null)
 			throw new IllegalStateException("Cannot project 3D coordinates to screen space when no projection camera is set.");
 
