@@ -235,7 +235,7 @@ public class ProcessManager implements Disposable {
 	private void startTransitionOut(ProcessInfo processInfo, boolean forRemoval) {
 		if (processInfo == null)
 			throw new IllegalArgumentException("processInfo cannot be null.");
-		if (!processInfo.isInactive || processInfo.isTransitioning)
+		if (processInfo.isInactive || processInfo.isTransitioning)
 			throw new UnsupportedOperationException();
 
 		processInfo.isTransitioning = true;
