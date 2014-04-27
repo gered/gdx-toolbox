@@ -37,14 +37,6 @@ public class ExtendedSpriteBatch extends SpriteBatch {
 		super(size, defaultShader);
 	}
 
-	public ExtendedSpriteBatch(int size, int buffers) {
-		super(size, buffers);
-	}
-
-	public ExtendedSpriteBatch(int size, int buffers, ShaderProgram defaultShader) {
-		super(size, buffers, defaultShader);
-	}
-
 	public void setPixelScale(int pixelScale) {
 		if (pixelScale <= 0)
 			throw new IllegalArgumentException();

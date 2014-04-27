@@ -4,16 +4,14 @@ import ca.blarg.gdx.graphics.shaders.DebugShader;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer;
-import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer10;
 import com.badlogic.gdx.graphics.glutils.ImmediateModeRenderer20;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.math.collision.Segment;
 import com.badlogic.gdx.math.collision.Sphere;
-import ca.blarg.gdx.graphics.shaders.DebugShader;
 
 /**
  * Similar idea to {@link com.badlogic.gdx.graphics.glutils.ShapeRenderer}, but provides more convenient methods to
@@ -35,10 +33,7 @@ public class DebugGeometryRenderer {
 	boolean oldDepthTestEnabled;
 
 	public DebugGeometryRenderer() {
-		if (Gdx.graphics.isGL20Available())
-			renderer = new ImmediateModeRenderer20(5000, false, true, 0, new DebugShader());
-		else
-			renderer = new ImmediateModeRenderer10();
+		renderer = new ImmediateModeRenderer20(5000, false, true, 0, new DebugShader());
 	}
 
 	private void vtx(Vector3 v, Color c) {
@@ -53,9 +48,9 @@ public class DebugGeometryRenderer {
 
 	private void enableDepthTest(boolean enable) {
 		if (enable)
-			Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
+			Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		else
-			Gdx.gl.glDisable(GL10.GL_DEPTH_TEST);
+			Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 	}
 
 	public void begin(Camera camera) {
@@ -63,9 +58,9 @@ public class DebugGeometryRenderer {
 	}
 
 	public void begin(Camera camera, boolean enableDepthTest) {
-		renderer.begin(camera.combined, GL10.GL_LINES);
+		renderer.begin(camera.combined, GL20.GL_LINES);
 
-		oldDepthTestEnabled = Gdx.gl20.glIsEnabled(GL10.GL_DEPTH_TEST);
+		oldDepthTestEnabled = Gdx.gl20.glIsEnabled(GL20.GL_DEPTH_TEST);
 		enableDepthTest(enableDepthTest);
 		Gdx.gl20.glLineWidth(2.0f);
 	}

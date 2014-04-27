@@ -79,9 +79,9 @@ public final class GraphicsHelpers {
 	 * restored (any Pixmap's drawn to it will need to be redrawn after the context restore).
 	 */
 	public static void drawToTexture (Texture destTexture, Pixmap srcPixmap, int x, int y) {
-		Gdx.gl.glBindTexture(GL10.GL_TEXTURE_2D, destTexture.getTextureObjectHandle());
+		Gdx.gl.glBindTexture(GL20.GL_TEXTURE_2D, destTexture.getTextureObjectHandle());
 		Gdx.gl.glTexSubImage2D(
-				GL10.GL_TEXTURE_2D, 0,
+				GL20.GL_TEXTURE_2D, 0,
 				x, y,
 				srcPixmap.getWidth(), srcPixmap.getHeight(),
 				srcPixmap.getGLFormat(),

@@ -2,13 +2,12 @@ package ca.blarg.gdx.graphics;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.decals.DecalMaterial;
-import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -199,8 +198,8 @@ public class BillboardSpriteBatch implements Disposable {
 		int destFactor = DecalMaterial.NO_BLEND;
 
 		if (tint.a > 0.0f && tint.a < 1.0f) {
-			srcFactor = GL10.GL_SRC_ALPHA;
-			destFactor = GL10.GL_ONE_MINUS_SRC_ALPHA;
+			srcFactor = GL20.GL_SRC_ALPHA;
+			destFactor = GL20.GL_ONE_MINUS_SRC_ALPHA;
 		}
 
 		decal.setColor(tint);

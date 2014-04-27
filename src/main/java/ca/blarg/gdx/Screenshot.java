@@ -2,7 +2,7 @@ package ca.blarg.gdx;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.PixmapIO;
 
@@ -45,11 +45,11 @@ public class Screenshot {
 	// kind of partially transparent pixels for screenshot purposes).
 
 	private static Pixmap getFrameBufferPixmap(int x, int y, int w, int h, boolean flipY) {
-		Gdx.gl.glPixelStorei(GL10.GL_PACK_ALIGNMENT, 1);
+		Gdx.gl.glPixelStorei(GL20.GL_PACK_ALIGNMENT, 1);
 
 		final Pixmap pixmap = new Pixmap(w, h, Pixmap.Format.RGB888);
 		ByteBuffer pixels = pixmap.getPixels();
-		Gdx.gl.glReadPixels(x, y, w, h, GL10.GL_RGB, GL10.GL_UNSIGNED_BYTE, pixels);
+		Gdx.gl.glReadPixels(x, y, w, h, GL20.GL_RGB, GL20.GL_UNSIGNED_BYTE, pixels);
 
 		final int numBytes = w * h * 3;
 		byte[] lines = new byte[numBytes];

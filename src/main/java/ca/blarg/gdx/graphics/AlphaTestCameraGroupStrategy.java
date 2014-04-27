@@ -2,7 +2,7 @@ package ca.blarg.gdx.graphics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
 import com.badlogic.gdx.graphics.g3d.decals.DecalMaterial;
 import com.badlogic.gdx.graphics.g3d.decals.GroupStrategy;
@@ -91,9 +91,6 @@ public class AlphaTestCameraGroupStrategy implements GroupStrategy, Disposable {
 	private final Comparator<Decal> cameraSorter;
 
 	public AlphaTestCameraGroupStrategy (final Camera camera) {
-		if (!Gdx.graphics.isGL20Available())
-			throw new UnsupportedOperationException("AlphaTestCameraGroupStrategy requires shader support.");
-
 		this.camera = camera;
 		createDefaultShader();
 
@@ -109,9 +106,6 @@ public class AlphaTestCameraGroupStrategy implements GroupStrategy, Disposable {
 	}
 
 	public AlphaTestCameraGroupStrategy (Camera camera, Comparator<Decal> sorter) {
-		if (!Gdx.graphics.isGL20Available())
-			throw new UnsupportedOperationException("AlphaTestCameraGroupStrategy requires shader support.");
-
 		this.camera = camera;
 		this.cameraSorter = sorter;
 		createDefaultShader();
@@ -133,7 +127,7 @@ public class AlphaTestCameraGroupStrategy implements GroupStrategy, Disposable {
 	@Override
 	public void beforeGroup (int group, Array<Decal> contents) {
 		if (group == GROUP_BLEND) {
-			Gdx.gl.glEnable(GL10.GL_BLEND);
+			Gdx.gl.glEnable(GL20.GL_BLEND);
 			contents.sort(cameraSorter);
 		} else {
 			for (int i = 0, n = contents.size; i < n; i++) {
@@ -162,13 +156,13 @@ public class AlphaTestCameraGroupStrategy implements GroupStrategy, Disposable {
 	@Override
 	public void afterGroup (int group) {
 		if (group == GROUP_BLEND) {
-			Gdx.gl.glDisable(GL10.GL_BLEND);
+			Gdx.gl.glDisable(GL20.GL_BLEND);
 		}
 	}
 
 	@Override
 	public void beforeGroups () {
-		Gdx.gl.glEnable(GL10.GL_DEPTH_TEST);
+		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		shader.begin();
 		shader.setUniformMatrix("u_projectionViewMatrix", camera.combined);
 		shader.setUniformi("u_texture", 0);
@@ -177,8 +171,8 @@ public class AlphaTestCameraGroupStrategy implements GroupStrategy, Disposable {
 	@Override
 	public void afterGroups () {
 		shader.end();
-		Gdx.gl.glDisable(GL10.GL_TEXTURE_2D);
-		Gdx.gl.glDisable(GL10.GL_DEPTH_TEST);
+		Gdx.gl.glDisable(GL20.GL_TEXTURE_2D);
+		Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
 	}
 
 	private void createDefaultShader () {
