@@ -95,8 +95,8 @@ public final class GraphicsHelpers {
 		viewportContext.getPerspectiveViewport().project(result);
 
 		// screen coordinates will be unscaled, need to apply appropriate scaling
-		result.x /= viewportContext.getOrthographicViewport().getUnitsPerPixel();
-		result.y /= viewportContext.getOrthographicViewport().getUnitsPerPixel();
+		result.x *= viewportContext.getOrthographicViewport().getUnitsPerPixel();
+		result.y *= viewportContext.getOrthographicViewport().getUnitsPerPixel();
 
 		// now center them on the bounds given
 		result.x -= (width / 2.0f);
