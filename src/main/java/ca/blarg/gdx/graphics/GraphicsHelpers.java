@@ -19,12 +19,12 @@ public final class GraphicsHelpers {
 		Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 	}
 
-	public static void renderCoordinateSystemAxis(DebugGeometryRenderer debugGeometryRenderer, ExtendedSpriteBatch spriteBatch, Camera projectionCamera, BitmapFont font, Vector3 origin) {
-		renderCoordinateSystemAxis(debugGeometryRenderer, spriteBatch, projectionCamera, font, origin, 5.0f);
+	public static void renderCoordinateSystemAxis(DebugGeometryRenderer debugGeometryRenderer, ExtendedSpriteBatch spriteBatch, ViewportContext viewportContext, BitmapFont font, Vector3 origin) {
+		renderCoordinateSystemAxis(debugGeometryRenderer, spriteBatch, viewportContext, font, origin, 5.0f);
 	}
 
-	public static void renderCoordinateSystemAxis(DebugGeometryRenderer debugGeometryRenderer, ExtendedSpriteBatch spriteBatch, Camera projectionCamera, BitmapFont font, Vector3 origin, float axisLength) {
-		debugGeometryRenderer.begin(projectionCamera);
+	public static void renderCoordinateSystemAxis(DebugGeometryRenderer debugGeometryRenderer, ExtendedSpriteBatch spriteBatch, ViewportContext viewportContext, BitmapFont font, Vector3 origin, float axisLength) {
+		debugGeometryRenderer.begin(viewportContext.getPerspectiveCamera());
 		debugGeometryRenderer.line(origin.x, origin.y, origin.z, origin.x + 0.0f, origin.y + axisLength, origin.z + 0.0f, Color.WHITE);
 		debugGeometryRenderer.line(origin.x, origin.y, origin.z, origin.x + 0.0f, origin.y + -axisLength, origin.z + 0.0f, Color.BLACK);
 		debugGeometryRenderer.line(origin.x, origin.y, origin.z, origin.x + -axisLength, origin.y + 0.0f, origin.z + 0.0f, Color.GREEN);
@@ -33,7 +33,7 @@ public final class GraphicsHelpers {
 		debugGeometryRenderer.line(origin.x, origin.y, origin.z, origin.x + 0.0f, origin.y + 0.0f, origin.z + axisLength, Color.YELLOW);
 		debugGeometryRenderer.end();
 
-		spriteBatch.begin(projectionCamera);
+		spriteBatch.begin(viewportContext);
 		spriteBatch.setColor(Color.WHITE);
 		spriteBatch.draw(font, origin.x + 0.0f, origin.y + axisLength, origin.z + 0.0f, "UP (+Y)", 0.5f);
 		spriteBatch.setColor(Color.BLACK);
@@ -88,5 +88,18 @@ public final class GraphicsHelpers {
 				srcPixmap.getGLType(),
 				srcPixmap.getPixels()
 		);
+	}
+
+	public static void getProjectedCenteredPosition(ViewportContext viewportContext, float x, float y, float z, float width, float height, Vector3 result) {
+		result.set(x, y, z);
+		viewportContext.getPerspectiveViewport().project(result);
+
+		// screen coordinates will be unscaled, need to apply appropriate scaling
+		result.x /= viewportContext.getOrthographicViewport().getUnitsPerPixel();
+		result.y /= viewportContext.getOrthographicViewport().getUnitsPerPixel();
+
+		// now center them on the bounds given
+		result.x -= (width / 2.0f);
+		result.y -= (height / 2.0f);
 	}
 }

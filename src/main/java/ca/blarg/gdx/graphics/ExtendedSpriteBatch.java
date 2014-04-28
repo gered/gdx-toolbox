@@ -1,6 +1,5 @@
 package ca.blarg.gdx.graphics;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -13,17 +12,15 @@ import com.badlogic.gdx.math.Vector3;
  * Various additional {@link SpriteBatch#draw} methods mostly for convenience. Most of these additional overloads
  * are to make drawing sprites at projected screen coordinates easier.
  *
- * Projected screen coordinate sprite rendering requires a perspective camera to project the 3D coordinates correctly.
- * A camera _must_ be set via {@link #begin(Camera)} (instead of using {@link #begin()}) before any of these draw
- * methods are called.
+ * For correct use of viewport pixel scaling and for projected screen coordinate sprite rendering to work at all,
+ * you must use the {@link #begin(ViewportContext)} overload instead of {@link #begin()}.
  */
 public class ExtendedSpriteBatch extends SpriteBatch {
 	static final float DEFAULT_COLOR = Color.WHITE.toFloatBits();
 
 	static final Vector3 tmp1 = new Vector3();
 
-	Camera projectionCamera;
-	int pixelScale = 1;
+	ViewportContext viewportContext;
 
 	public ExtendedSpriteBatch() {
 		super();
@@ -37,27 +34,21 @@ public class ExtendedSpriteBatch extends SpriteBatch {
 		super(size, defaultShader);
 	}
 
-	public void setPixelScale(int pixelScale) {
-		if (pixelScale <= 0)
-			throw new IllegalArgumentException();
-		this.pixelScale = pixelScale;
-	}
-
 	@Override
 	public void begin() {
 		super.begin();
 		setColor(DEFAULT_COLOR);
 	}
 
-	public void begin(Camera projectionCamera) {
+	public void begin(ViewportContext viewportContext) {
 		begin();
-		this.projectionCamera = projectionCamera;
+		this.viewportContext = viewportContext;
 	}
 
 	@Override
 	public void end() {
 		super.end();
-		this.projectionCamera = null;
+		this.viewportContext = null;
 	}
 
 	/**************************************************************************/
@@ -71,7 +62,7 @@ public class ExtendedSpriteBatch extends SpriteBatch {
 	}
 
 	public void draw(Texture texture, float x, float y, float z, float width, float height, float u, float v, float u2, float v2) {
-		getProjectedCenteredPosition(x, y, z, width, height, tmp1);
+		GraphicsHelpers.getProjectedCenteredPosition(viewportContext, x, y, z, width, height, tmp1);
 		draw(texture, tmp1.x, tmp1.y, width, height, u, v, u2, v2);
 	}
 
@@ -80,7 +71,7 @@ public class ExtendedSpriteBatch extends SpriteBatch {
 	}
 
 	public void draw(Texture texture, float x, float y, float z, float width, float height, int srcX, int srcY, int srcWidth, int srcHeight) {
-		getProjectedCenteredPosition(x, y, z, width, height, tmp1);
+		GraphicsHelpers.getProjectedCenteredPosition(viewportContext, x, y, z, width, height, tmp1);
 		draw(texture, tmp1.x, tmp1.y, width, height, srcX, srcY, srcWidth, srcHeight, false, false);
 	}
 
@@ -91,7 +82,7 @@ public class ExtendedSpriteBatch extends SpriteBatch {
 	}
 
 	public void draw(TextureRegion region, float x, float y, float z, float width, float height) {
-		getProjectedCenteredPosition(x, y, z, width, height, tmp1);
+		GraphicsHelpers.getProjectedCenteredPosition(viewportContext, x, y, z, width, height, tmp1);
 		draw(region, tmp1.x, tmp1.y, width, height);
 	}
 
@@ -158,7 +149,7 @@ public class ExtendedSpriteBatch extends SpriteBatch {
 		float scaledBoundsWidth = bounds.width * scale;
 		float scaledBoundsHeight = bounds.height * scale;
 
-		getProjectedCenteredPosition(x, y, z, scaledBoundsWidth, scaledBoundsHeight, tmp1);
+		GraphicsHelpers.getProjectedCenteredPosition(viewportContext, x, y, z, scaledBoundsWidth, scaledBoundsHeight, tmp1);
 
 		// getProjectedCenteredPosition will actually center the Y coord incorrectly... we need to add
 		// instead of subtract, but since that's already been done we need to add twice... (hence, *2)
@@ -170,20 +161,4 @@ public class ExtendedSpriteBatch extends SpriteBatch {
 	}
 
 	/**************************************************************************/
-
-	public void getProjectedCenteredPosition(float x, float y, float z, float width, float height, Vector3 result) {
-		if (projectionCamera == null)
-			throw new IllegalStateException("Cannot project 3D coordinates to screen space when no projection camera is set.");
-
-		result.set(x, y, z);
-		projectionCamera.project(result);
-
-		// screen coordinates will be unscaled, need to apply appropriate scaling
-		result.x /= pixelScale;
-		result.y /= pixelScale;
-
-		// now center them on the bounds given
-		result.x -= (width / 2.0f);
-		result.y -= (height / 2.0f);
-	}
 }

@@ -75,7 +75,7 @@ public class FadeScreenEffect extends ScreenEffect
 		spriteBatch.draw(
 				texture,
 				0, 0,
-				viewportContext.pixelScaler.getScaledWidth(), viewportContext.pixelScaler.getScaledHeight()
+				viewportContext.getOrthographicViewport().getWorldWidth(), viewportContext.getOrthographicViewport().getWorldHeight()
 		);
 		spriteBatch.end();
 	}

@@ -73,7 +73,6 @@ public abstract class GameApp implements Disposable {
 	public void onRender(float interpolation) {
 		viewportContext.onPreRender();
 		spriteBatch.setProjectionMatrix(viewportContext.getOrthographicCamera().combined);
-		spriteBatch.setPixelScale(viewportContext.pixelScaler.getScale());
 
 		stateManager.onRender(interpolation);
 
