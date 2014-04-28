@@ -6,16 +6,16 @@ public class LargePixelScreenViewport extends ScreenViewport {
 	@Override
 	public void update(int screenWidth, int screenHeight, boolean centerCamera) {
 		// TODO: these might need tweaking, this is fairly arbitrary
-		if (viewportWidth < 640 || viewportHeight < 480)
-			setUnitsPerPixel(1);
-		else if (viewportWidth < 960 || viewportHeight < 720)
-			setUnitsPerPixel(2);
-		else if (viewportWidth < 1280 || viewportHeight < 960)
-			setUnitsPerPixel(3);
-		else if (viewportWidth < 1920 || viewportHeight < 1080)
-			setUnitsPerPixel(4);
+		if (screenWidth < 640 || screenHeight < 480)
+			setUnitsPerPixel(1.0f);
+		else if (screenWidth < 960 || screenHeight < 720)
+			setUnitsPerPixel(1.0f / 2.0f);
+		else if (screenWidth < 1280 || screenHeight < 960)
+			setUnitsPerPixel(1.0f / 3.0f);
+		else if (screenWidth < 1920 || screenHeight < 1080)
+			setUnitsPerPixel(1.0f / 4.0f);
 		else
-			setUnitsPerPixel(5);
+			setUnitsPerPixel(1.0f / 5.0f);
 
 		// TODO: desktop "retina" / 4K display sizes?
 
