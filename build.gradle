@@ -10,6 +10,10 @@ ext.gdxVersion = "1.0.0"
 
 sourceCompatibility = 1.6
 
+configurations {
+    deployerJars
+}
+
 repositories {
 	mavenCentral()
 	maven { url "http://oss.sonatype.org/content/repositories/releases/" }
@@ -19,6 +23,17 @@ repositories {
 dependencies {
 	compile "com.badlogicgames.gdx:gdx:$gdxVersion"
 	compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+    deployerJars "org.apache.maven.wagon:wagon-ssh:2.2"
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        configuration = configurations.deployerJars
+        uniqueVersion = false
+        repository(url: mavenDeployUrl) {
+            authentication(userName: mavenDeployUser, privateKey: mavenDeployPrivateKeyFile)
+        }
+    }
 }
 
 eclipse.project {
