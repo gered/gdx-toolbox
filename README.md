@@ -9,7 +9,7 @@ This is *not* intended to be a generic use-everywhere type of library.
 <dependency>
     <groupId>ca.blarg.gdx</groupId>
     <artifactId>gdx-toolbox</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
 </dependency>
 ```
 
