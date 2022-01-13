@@ -145,9 +145,9 @@ public class ExtendedSpriteBatch extends SpriteBatch {
 	}
 
 	public void draw(BitmapFont font, float x, float y, float z, CharSequence str, float scale) {
-		BitmapFont.TextBounds bounds = font.getMultiLineBounds(str);
-		float scaledBoundsWidth = bounds.width * scale;
-		float scaledBoundsHeight = bounds.height * scale;
+		GraphicsHelpers.glyphLayout.setText(font, str);
+		float scaledBoundsWidth = GraphicsHelpers.glyphLayout.width * scale;
+		float scaledBoundsHeight = GraphicsHelpers.glyphLayout.height * scale;
 
 		GraphicsHelpers.getProjectedCenteredPosition(viewportContext, x, y, z, scaledBoundsWidth, scaledBoundsHeight, tmp1);
 

@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 public final class MathHelpers {
 	static final Vector2 v2tmpA = new Vector2();
 	static final Vector2 v2tmpB = new Vector2();
+	static final Vector3 v3tmpA = new Vector3();
+	static final Vector3 v3tmpB = new Vector3();
 
 	public static final float FLOAT_EPSILON       = 1.401298E-45f;   // smallest floating point value greater then zero
 	public static final float EPSILON             = 0.000001f; //0.0000000001f;
@@ -207,7 +209,9 @@ public final class MathHelpers {
 	}
 
 	public static void getScaleFactor(BoundingBox originalSize, BoundingBox desiredSize, Vector3 result) {
-		getScaleFactor(originalSize.getDimensions(), desiredSize.getDimensions(), result);
+		originalSize.getDimensions(v3tmpA);
+		desiredSize.getDimensions(v3tmpB);
+		getScaleFactor(v3tmpA, v3tmpB, result);
 	}
 
 	public static void getScaleFactor(Vector3 originalSize, Vector3 desiredSize, Vector3 result) {

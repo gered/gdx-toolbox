@@ -57,12 +57,12 @@ public class Vertices {
 		positionOffset = attributes.getOffset(VertexAttributes.Usage.Position);
 		texCoordOffset = attributes.getOffset(VertexAttributes.Usage.TextureCoordinates);
 		normalOffset = attributes.getOffset(VertexAttributes.Usage.Normal);
-		colorOffset = attributes.getOffset(VertexAttributes.Usage.Color);
+		colorOffset = attributes.getOffset(VertexAttributes.Usage.ColorUnpacked);
 
 		hasPosition = attributes.findByUsage(VertexAttributes.Usage.Position) != null;
 		hasTexCoord = attributes.findByUsage(VertexAttributes.Usage.TextureCoordinates) != null;
 		hasNormal = attributes.findByUsage(VertexAttributes.Usage.Normal) != null;
-		hasColor = attributes.findByUsage(VertexAttributes.Usage.Color) != null;
+		hasColor = attributes.findByUsage(VertexAttributes.Usage.ColorUnpacked) != null;
 	}
 
 	public float[] buffer() {

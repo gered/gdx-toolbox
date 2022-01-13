@@ -3,12 +3,15 @@ package ca.blarg.gdx.graphics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 
 public final class GraphicsHelpers {
 	final static Matrix4 tmpTransform = new Matrix4();
+
+	public final static GlyphLayout glyphLayout = new GlyphLayout();
 
 	public static void clear() {
 		clear(0.0f, 0.0f, 0.0f, 1.0f);
